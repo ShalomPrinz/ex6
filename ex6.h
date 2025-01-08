@@ -1,10 +1,10 @@
 #ifndef EX6_H
 #define EX6_H
 
+// TODO allowed? for NULL
+#include <stddef.h>
 
-
-typedef enum
-{
+typedef enum {
     GRASS,
     FIRE,
     WATER,
@@ -22,14 +22,12 @@ typedef enum
     ICE
 } PokemonType;
 
-typedef enum
-{
+typedef enum {
     CANNOT_EVOLVE,
     CAN_EVOLVE
 } EvolutionStatus;
 
-typedef struct PokemonData
-{
+typedef struct PokemonData {
     int id;
     char *name;
     PokemonType TYPE;
@@ -39,16 +37,14 @@ typedef struct PokemonData
 } PokemonData;
 
 // Binary Tree Node (for Pokédex)
-typedef struct PokemonNode
-{
+typedef struct PokemonNode {
     PokemonData *data;
     struct PokemonNode *left;
     struct PokemonNode *right;
 } PokemonNode;
 
 // Linked List Node (for Owners)
-typedef struct OwnerNode
-{
+typedef struct OwnerNode {
     char *ownerName;          // Owner's name
     PokemonNode *pokedexRoot; // Pointer to the root of the owner's Pokédex
     struct OwnerNode *next;   // Next owner in the linked list
@@ -234,8 +230,8 @@ void printPokemonNode(PokemonNode *node);
    5) Display Methods (BFS, Pre, In, Post, Alphabetical)
    ------------------------------------------------------------ */
 
-typedef struct
-{
+// For alphabetical display, we collect all nodes in an array, then qsort by name
+typedef struct {
     PokemonNode **nodes;
     int size;
     int capacity;

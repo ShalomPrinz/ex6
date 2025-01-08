@@ -15,27 +15,17 @@
 //   const PokemonData pokedex[];
 // ================================================
 
-// For alphabetical display, we collect all nodes in an array, then qsort by name
-typedef struct
-{
-    PokemonNode **nodes;
-    int size;
-    int capacity;
-} NodeArray;
-
 // --------------------------------------------------------------
 // 1) Safe integer reading
 // --------------------------------------------------------------
 
-void trimWhitespace(char *str)
-{
+void trimWhitespace(char *str) {
     // Remove leading spaces/tabs/\r
     int start = 0;
     while (str[start] == ' ' || str[start] == '\t' || str[start] == '\r')
         start++;
 
-    if (start > 0)
-    {
+    if (start > 0) {
         int idx = 0;
         while (str[start])
             str[idx++] = str[start++];
@@ -43,21 +33,18 @@ void trimWhitespace(char *str)
     }
 
     // Remove trailing spaces/tabs/\r
-    int len = (int)strlen(str);
-    while (len > 0 && (str[len - 1] == ' ' || str[len - 1] == '\t' || str[len - 1] == '\r'))
-    {
+    int len = (int) strlen(str);
+    while (len > 0 && (str[len - 1] == ' ' || str[len - 1] == '\t' || str[len - 1] == '\r')) {
         str[--len] = '\0';
     }
 }
 
-char *myStrdup(const char *src)
-{
+char *myStrdup(const char *src) {
     if (!src)
         return NULL;
     size_t len = strlen(src);
     char *dest = (char *)malloc(len + 1);
-    if (!dest)
-    {
+    if (!dest) {
         printf("Memory allocation failed in myStrdup.\n");
         return NULL;
     }
@@ -65,19 +52,16 @@ char *myStrdup(const char *src)
     return dest;
 }
 
-int readIntSafe(const char *prompt)
-{
+int readIntSafe(const char *prompt) {
     char buffer[INT_BUFFER];
     int value;
     int success = 0;
 
-    while (!success)
-    {
+    while (!success) {
         printf("%s", prompt);
 
         // If we fail to read, treat it as invalid
-        if (!fgets(buffer, sizeof(buffer), stdin))
-        {
+        if (!fgets(buffer, sizeof(buffer), stdin)) {
             printf("Invalid input.\n");
             clearerr(stdin);
             continue;
@@ -92,24 +76,21 @@ int readIntSafe(const char *prompt)
             buffer[--len] = '\0';
 
         // 2) Check if empty after stripping
-        if (len == 0)
-        {
+        if (len == 0) {
             printf("Invalid input.\n");
             continue;
         }
 
         // 3) Attempt to parse integer with strtol
         char *endptr;
-        value = (int)strtol(buffer, &endptr, 10);
+        value = (int) strtol(buffer, &endptr, 10);
 
         // If endptr didn't point to the end => leftover chars => invalid
         // or if buffer was something non-numeric
-        if (*endptr != '\0')
-        {
+        if (*endptr != '\0') {
             printf("Invalid input.\n");
         }
-        else
-        {
+        else {
             // We got a valid integer
             success = 1;
         }
@@ -117,71 +98,65 @@ int readIntSafe(const char *prompt)
     return value;
 }
 
+// TODO why not set enum values to string? ...
 // --------------------------------------------------------------
 // 2) Utility: Get type name from enum
 // --------------------------------------------------------------
-const char *getTypeName(PokemonType type)
-{
-    switch (type)
-    {
-    case GRASS:
-        return "GRASS";
-    case FIRE:
-        return "FIRE";
-    case WATER:
-        return "WATER";
-    case BUG:
-        return "BUG";
-    case NORMAL:
-        return "NORMAL";
-    case POISON:
-        return "POISON";
-    case ELECTRIC:
-        return "ELECTRIC";
-    case GROUND:
-        return "GROUND";
-    case FAIRY:
-        return "FAIRY";
-    case FIGHTING:
-        return "FIGHTING";
-    case PSYCHIC:
-        return "PSYCHIC";
-    case ROCK:
-        return "ROCK";
-    case GHOST:
-        return "GHOST";
-    case DRAGON:
-        return "DRAGON";
-    case ICE:
-        return "ICE";
-    default:
-        return "UNKNOWN";
+const char *getTypeName(PokemonType type) {
+    switch (type) {
+        case GRASS:
+            return "GRASS";
+        case FIRE:
+            return "FIRE";
+        case WATER:
+            return "WATER";
+        case BUG:
+            return "BUG";
+        case NORMAL:
+            return "NORMAL";
+        case POISON:
+            return "POISON";
+        case ELECTRIC:
+            return "ELECTRIC";
+        case GROUND:
+            return "GROUND";
+        case FAIRY:
+            return "FAIRY";
+        case FIGHTING:
+            return "FIGHTING";
+        case PSYCHIC:
+            return "PSYCHIC";
+        case ROCK:
+            return "ROCK";
+        case GHOST:
+            return "GHOST";
+        case DRAGON:
+            return "DRAGON";
+        case ICE:
+            return "ICE";
+        default:
+            return "UNKNOWN";
     }
 }
 
 // --------------------------------------------------------------
 // Utility: getDynamicInput (for reading a line into malloc'd memory)
 // --------------------------------------------------------------
-char *getDynamicInput()
-{
+char *getDynamicInput() {
     char *input = NULL;
     size_t size = 0, capacity = 1;
     input = (char *)malloc(capacity);
-    if (!input)
-    {
+    if (!input) {
         printf("Memory allocation failed.\n");
         return NULL;
     }
 
     int c;
-    while ((c = getchar()) != '\n' && c != EOF)
-    {
-        if (size + 1 >= capacity)
-        {
+    while ((c = getchar()) != '\n' && c != EOF) {
+        if (size + 1 >= capacity) {
             capacity *= 2;
             char *temp = (char *)realloc(input, capacity);
-            if (!temp)
-            {
+            if (!temp) {
                 printf("Memory reallocation failed.\n");
                 free(input);
                 return NULL;
@@ -199,8 +174,7 @@ char *getDynamicInput()
 }
 
 // Function to print a single Pokemon node
-void printPokemonNode(PokemonNode *node)
-{
+void printPokemonNode(PokemonNode *node) {
     if (!node)
         return;
     printf("ID: %d, Name: %s, Type: %s, HP: %d, Attack: %d, Can Evolve: %s\n",
@@ -215,10 +189,8 @@ void printPokemonNode(PokemonNode *node)
 // --------------------------------------------------------------
 // Display Menu
 // --------------------------------------------------------------
-void displayMenu(OwnerNode *owner)
-{
-    if (!owner->pokedexRoot)
-    {
+void displayMenu(OwnerNode *owner) {
+    if (!owner->pokedexRoot) {
         printf("Pokedex is empty.\n");
         return;
     }
@@ -232,86 +204,84 @@ void displayMenu(OwnerNode *owner)
 
     int choice = readIntSafe("Your choice: ");
 
-    switch (choice)
-    {
-    case 1:
-        displayBFS(owner->pokedexRoot);
-        break;
-    case 2:
-        preOrderTraversal(owner->pokedexRoot);
-        break;
-    case 3:
-        inOrderTraversal(owner->pokedexRoot);
-        break;
-    case 4:
-        postOrderTraversal(owner->pokedexRoot);
-        break;
-    case 5:
-        displayAlphabetical(owner->pokedexRoot);
-        break;
-    default:
-        printf("Invalid choice.\n");
+    switch (choice) {
+        case 1:
+            // displayBFS(owner->pokedexRoot);
+            break;
+        case 2:
+            // preOrderTraversal(owner->pokedexRoot);
+            break;
+        case 3:
+            // inOrderTraversal(owner->pokedexRoot);
+            break;
+        case 4:
+            // postOrderTraversal(owner->pokedexRoot);
+            break;
+        case 5:
+            // displayAlphabetical(owner->pokedexRoot);
+            break;
+        default:
+            printf("Invalid choice.\n");
     }
 }
 
 // --------------------------------------------------------------
 // Sub-menu for existing Pokedex
 // --------------------------------------------------------------
-void enterExistingPokedexMenu()
-{
-    // list owners
-    printf("\nExisting Pokedexes:\n");
-    // you need to implement a few things here :)
+// void enterExistingPokedexMenu() {
+//     // list owners
+//     printf("\nExisting Pokedexes:\n");
+//     // you need to implement a few things here :)
+//
+//     printf("\nEntering %s's Pokedex...\n", cur->ownerName);
+//
+//     int subChoice;
+//     do {
+//         printf("\n-- %s's Pokedex Menu --\n", cur->ownerName);
+//         printf("1. Add Pokemon\n");
+//         printf("2. Display Pokedex\n");
+//         printf("3. Release Pokemon (by ID)\n");
+//         printf("4. Pokemon Fight!\n");
+//         printf("5. Evolve Pokemon\n");
+//         printf("6. Back to Main\n");
+//
+//         subChoice = readIntSafe("Your choice: ");
+//
+//         switch (subChoice) {
+//             case 1:
+//                 addPokemon(cur);
+//                 break;
+//             case 2:
+//                 displayMenu(cur);
+//                 break;
+//             case 3:
+//                 freePokemon(cur);
+//                 break;
+//             case 4:
+//                 pokemonFight(cur);
+//                 break;
+//             case 5:
+//                 evolvePokemon(cur);
+//                 break;
+//             case 6:
+//                 printf("Back to Main Menu.\n");
+//                 break;
+//             default:
+//                 printf("Invalid choice.\n");
+//         }
+//     } while (subChoice != 6);
+// }
 
-    printf("\nEntering %s's Pokedex...\n", cur->ownerName);
+void openPokedexMenu(OwnerNode *owner) {
 
-    int subChoice;
-    do
-    {
-        printf("\n-- %s's Pokedex Menu --\n", cur->ownerName);
-        printf("1. Add Pokemon\n");
-        printf("2. Display Pokedex\n");
-        printf("3. Release Pokemon (by ID)\n");
-        printf("4. Pokemon Fight!\n");
-        printf("5. Evolve Pokemon\n");
-        printf("6. Back to Main\n");
-
-        subChoice = readIntSafe("Your choice: ");
-
-        switch (subChoice)
-        {
-        case 1:
-            addPokemon(cur);
-            break;
-        case 2:
-            displayMenu(cur);
-            break;
-        case 3:
-            freePokemon(cur);
-            break;
-        case 4:
-            pokemonFight(cur);
-            break;
-        case 5:
-            evolvePokemon(cur);
-            break;
-        case 6:
-            printf("Back to Main Menu.\n");
-            break;
-        default:
-            printf("Invalid choice.\n");
-        }
-    } while (subChoice != 6);
 }
 
 // --------------------------------------------------------------
 // Main Menu
 // --------------------------------------------------------------
-void mainMenu()
-{
+void mainMenu() {
     int choice;
-    do
-    {
+    do {
         printf("\n=== Main Menu ===\n");
         printf("1. New Pokedex\n");
         printf("2. Existing Pokedex\n");
@@ -322,38 +292,36 @@ void mainMenu()
         printf("7. Exit\n");
         choice = readIntSafe("Your choice: ");
 
-        switch (choice)
-        {
-        case 1:
-            openPokedexMenu();
-            break;
-        case 2:
-            enterExistingPokedexMenu();
-            break;
-        case 3:
-            deletePokedex();
-            break;
-        case 4:
-            mergePokedexMenu();
-            break;
-        case 5:
-            sortOwners();
-            break;
-        case 6:
-            printOwnersCircular();
-            break;
-        case 7:
-            printf("Goodbye!\n");
-            break;
-        default:
-            printf("Invalid.\n");
+        switch (choice) {
+            case 1:
+                openPokedexMenu();
+                break;
+            case 2:
+                // enterExistingPokedexMenu();
+                break;
+            case 3:
+                // deletePokedex();
+                break;
+            case 4:
+                // mergePokedexMenu();
+                break;
+            case 5:
+                // sortOwners();
+                break;
+            case 6:
+                // printOwnersCircular();
+                break;
+            case 7:
+                printf("Goodbye!\n");
+                break;
+            default:
+                printf("Invalid.\n");
         }
     } while (choice != 7);
 }
 
-int main()
-{
+int main() {
     mainMenu();
-    freeAllOwners();
+    // freeAllOwners();
     return 0;
 }
