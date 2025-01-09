@@ -29,14 +29,72 @@ shalom
 5. Sort Owners by Name
 6. Print Owners in a direction X times
 7. Exit
-Your choice:
-Your name:
-Choose Starter:
+Your choice: Your name: Choose Starter:
 1. Bulbasaur
 2. Charmander
 3. Squirtle
-Your choice:
-New Pokedex created for shalom with starter Bulbasaur.
+Your choice: New Pokedex created for shalom with starter Bulbasaur.
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice: Goodbye!
+
+- name: add addDup add exit
+  input: |
+1
+first
+1
+1
+first
+1
+second
+2
+7
+  output: |
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice: Your name: Choose Starter:
+1. Bulbasaur
+2. Charmander
+3. Squirtle
+Your choice: New Pokedex created for first with starter Bulbasaur.
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice: Your name: Owner 'first' already exists. Not creating a new Pokedex.
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice: Your name: Choose Starter:
+1. Bulbasaur
+2. Charmander
+3. Squirtle
+Your choice: New Pokedex created for second with starter Charmander.
 
 === Main Menu ===
 1. New Pokedex

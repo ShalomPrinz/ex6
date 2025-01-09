@@ -6,6 +6,8 @@
 
 # define INT_BUFFER 128
 
+// TODO define all my new funcs in h file and copy func documentation
+
 // ================================================
 // Basic struct definitions from ex6.h assumed:
 //   PokemonData { int id; char *name; PokemonType TYPE; int hp; int attack; EvolutionStatus CAN_EVOLVE; }
@@ -272,8 +274,103 @@ void displayMenu(OwnerNode *owner) {
 //     } while (subChoice != 6);
 // }
 
-void openPokedexMenu(OwnerNode *owner) {
+/**
+ * @param first first string
+ * @param second second string
+ * @return whether strings are equal, by using strcmp
+ */
+int areStringsEqual(char *first, char *second) {
+    return strcmp(first, second) == 0;
+}
 
+/**
+ * @param name owner name to validate
+ * @return whether given name is a duplicate of any existing owner's name
+ */
+int isDuplicatedOwnerName(char *name) {
+    // If no owners at all, duplication is not possible
+    if (ownerHead == NULL)
+        return 0;
+
+    // Iterate over all owners
+    OwnerNode *currentOwner = ownerHead;
+    char *initialName = currentOwner->ownerName;
+    do {
+        // Validate ownerName isn't duplicate of any existing owner
+        if (areStringsEqual(currentOwner->ownerName, name))
+            return 1; // name is a duplication of existing owner's name
+
+        // Move on to next owner in list
+        currentOwner = currentOwner->next;
+    } while (!areStringsEqual(currentOwner->ownerName, initialName));
+
+    // No duplication found
+    return 0;
+}
+
+OwnerNode *createOwner(char *ownerName, PokemonNode *starter) {
+    // Create newOwner's node with given input data
+    OwnerNode *newOwner = (OwnerNode *)malloc(sizeof(OwnerNode));
+    if (newOwner == NULL) {
+        printf("Memory allocation failed.\n");
+        return NULL;
+    }
+
+    // Fill newOwner's data with given data
+    newOwner->ownerName = ownerName;
+    newOwner->pokedexRoot = starter;
+    return newOwner;
+}
+
+void openPokedexMenu() {
+    // Input owner name
+    printf("Your name: ");
+    char *name = getDynamicInput();
+
+    // Validate name isn't duplicate of existing owner name
+    if (isDuplicatedOwnerName(name)) {
+        printf("Owner '%s' already exists. Not creating a new Pokedex.\n", name);
+        free(name);
+        return;
+    }
+
+    // Input starter pokemon
+    printf("Choose Starter:\n1. Bulbasaur\n2. Charmander\n3. Squirtle\n");
+    int choice = readIntSafe("Your choice: ");
+    int pokemonIndex = (choice - 1) * 3; // TODO explain the formula
+
+    // Init new owner's pokedex
+    PokemonNode *ownerPokedex = (PokemonNode *)malloc(sizeof(PokemonNode));
+    if (ownerPokedex == NULL) {
+        printf("Memory allocation failed.\n");
+        return;
+    }
+
+    ownerPokedex->left = NULL;
+    ownerPokedex->right = NULL;
+    // TODO should I malloc new mem for this? currently i think not
+    ownerPokedex->data = (PokemonData *) &pokedex[pokemonIndex];
+
+    // Add owner to global owner linked list
+    OwnerNode *newOwner = createOwner(name, ownerPokedex);
+    if (newOwner == NULL)
+        return;
+
+    if (ownerHead == NULL) {
+        // If no owners yet, ownerHead should be newOwner
+        ownerHead = newOwner;
+        newOwner->next = newOwner;
+        newOwner->prev = newOwner;
+    } else {
+        // Update circular list to match newly inserted newOwner
+        OwnerNode *lastOwner = ownerHead->prev;
+        lastOwner->next = newOwner;
+        ownerHead->prev = newOwner;
+        newOwner->next = ownerHead;
+        newOwner->prev = lastOwner;
+    }
+
+    printf("New Pokedex created for %s with starter %s.\n", name, ownerPokedex->data->name);
 }
 
 // --------------------------------------------------------------
@@ -320,8 +417,48 @@ void mainMenu() {
     } while (choice != 7);
 }
 
+/**
+ * @brief Removes owner from owners list and frees it from heap
+ * @param owner owner to remove
+ */
+void removeOwner(OwnerNode* owner) {
+    if (owner->next != owner) {
+        // Connect prev of owner to its next
+        owner->next->prev = owner->prev;
+        owner->prev->next = owner->next;
+    }
+
+    // Reset and free owner properties
+    owner->next = NULL;
+    owner->prev = NULL;
+    free(owner->ownerName);
+    free(owner->pokedexRoot); // TODO implement
+    free(owner);
+    owner = NULL;
+}
+
+void freeAllOwners() {
+    // No owners - nothing to free
+    if (ownerHead == NULL)
+        return;
+
+    // Iterate over all owners and free them
+    OwnerNode *current = ownerHead;
+    while (current != NULL && current != current->next) {
+        OwnerNode *next = current->next;
+        removeOwner(current);
+        current = next;
+    }
+
+    // Remove last remaining owner
+    removeOwner(current);
+
+    // Reset ownerHead to NULL as required
+    ownerHead = NULL;
+}
+
 int main() {
     mainMenu();
-    // freeAllOwners();
+    freeAllOwners();
     return 0;
 }
