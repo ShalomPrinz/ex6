@@ -274,6 +274,28 @@ void displayMenu(OwnerNode *owner) {
 //     } while (subChoice != 6);
 // }
 
+void printOwnersCircular() {
+    if (ownerHead == NULL) {
+        printf("No owners.\n");
+        return;
+    }
+
+    // TODO currently assuming input is valid + scanf is quite weird
+    printf("Enter direction (F or B): ");
+    char c;
+    scanf(" %c", &c);
+
+    printf("How many prints? ");
+    int count;
+    scanf("%d ", &count);
+
+    OwnerNode *current = ownerHead;
+    for (int i = 1; i <= count; i++) {
+        printf("[%d] %s\n", i, current->ownerName);
+        current = c == 'F' ? current->next : current->prev;
+    }
+}
+
 /**
  * @param first first string
  * @param second second string
@@ -405,7 +427,7 @@ void mainMenu() {
                 // sortOwners();
                 break;
             case 6:
-                // printOwnersCircular();
+                printOwnersCircular();
                 break;
             case 7:
                 printf("Goodbye!\n");

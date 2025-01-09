@@ -1,5 +1,6 @@
 CMakeLists.txt
 input.txt
+new_tests.txt
 README.md
 
 .idea
