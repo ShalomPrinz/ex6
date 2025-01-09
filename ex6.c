@@ -294,7 +294,6 @@ int isDuplicatedOwnerName(char *name) {
 
     // Iterate over all owners
     OwnerNode *currentOwner = ownerHead;
-    char *initialName = currentOwner->ownerName;
     do {
         // Validate ownerName isn't duplicate of any existing owner
         if (areStringsEqual(currentOwner->ownerName, name))
@@ -302,7 +301,7 @@ int isDuplicatedOwnerName(char *name) {
 
         // Move on to next owner in list
         currentOwner = currentOwner->next;
-    } while (!areStringsEqual(currentOwner->ownerName, initialName));
+    } while (currentOwner != ownerHead);
 
     // No duplication found
     return 0;
@@ -397,7 +396,7 @@ void mainMenu() {
                 // enterExistingPokedexMenu();
                 break;
             case 3:
-                // deletePokedex();
+                deletePokedex();
                 break;
             case 4:
                 // mergePokedexMenu();
@@ -418,7 +417,7 @@ void mainMenu() {
 }
 
 /**
- * @brief Removes owner from owners list and frees it from heap
+ * @brief Removes owner from owners list and frees it
  * @param owner owner to remove
  */
 void removeOwner(OwnerNode* owner) {
@@ -434,7 +433,6 @@ void removeOwner(OwnerNode* owner) {
     free(owner->ownerName);
     free(owner->pokedexRoot); // TODO implement
     free(owner);
-    owner = NULL;
 }
 
 void freeAllOwners() {
@@ -455,6 +453,46 @@ void freeAllOwners() {
 
     // Reset ownerHead to NULL as required
     ownerHead = NULL;
+}
+
+void deletePokedex() {
+    if (ownerHead == NULL) {
+        printf("No existing Pokedexes to delete.\n");
+        return;
+    }
+
+    // Print all pokedexes with indices by their order
+    printf("\n=== Delete a Pokedex ===\n");
+    OwnerNode *currentOwner = ownerHead;
+    int ownerIndex = 1;
+    do {
+        // Print each pokedex in this format, then move on to next pokedex
+        printf("%d. %s\n", ownerIndex++, currentOwner->ownerName);
+        currentOwner = currentOwner->next;
+    } while (currentOwner != ownerHead);
+
+    // Input an owner to delete (by its index)
+    int choice = readIntSafe("Choose a Pokedex to delete by number: ");
+    // Reset values for another loop, in order to reach
+    currentOwner = ownerHead;
+    ownerIndex = 0;
+    // Loop until ownerIndex equals choice
+    while (choice > ++ownerIndex)
+        currentOwner = currentOwner->next;
+
+    // Remove chosen owner from owners list
+    printf("Deleting %s's entire Pokedex...\n", currentOwner->ownerName);
+    /*
+     If first owner is removed, save its next owner for after removal
+     It should be NULL if there is only one owner, otherwise simply the next owner
+    */
+    OwnerNode* nextOwner = ownerHead == ownerHead->next ? NULL : ownerHead->next;
+    removeOwner(currentOwner);
+    printf("Pokedex deleted.\n");
+
+    // If first pokedex was removed, set head to the second (which now becomes first)
+    if (currentOwner == ownerHead)
+        ownerHead = nextOwner;
 }
 
 int main() {

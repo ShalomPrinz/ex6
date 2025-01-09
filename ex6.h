@@ -1,8 +1,10 @@
 #ifndef EX6_H
 #define EX6_H
 
-// TODO allowed? for NULL
-#include <stddef.h>
+#include <ctype.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 typedef enum {
     GRASS,
