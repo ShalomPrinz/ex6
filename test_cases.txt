@@ -408,3 +408,155 @@ Your choice: Enter direction (F or B): How many prints? [1] 898
 6. Print Owners in a direction X times
 7. Exit
 Your choice: Goodbye!
+
+- name: sort add sort printF1 add add add sort printF11
+  input: |
+5
+1
+k+#
+2
+5
+6
+F
+1
+1
+ubuntu
+3
+1
+e$%
+2
+1
+o*&^~
+1
+5
+6
+F
+11
+7
+  output: |
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice: 0 or 1 owners only => no need to sort.
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice: Your name: Choose Starter:
+1. Bulbasaur
+2. Charmander
+3. Squirtle
+Your choice: New Pokedex created for k+# with starter Charmander.
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice: Owners sorted by name.
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice: Enter direction (F or B): How many prints? [1] k+#
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice: Your name: Choose Starter:
+1. Bulbasaur
+2. Charmander
+3. Squirtle
+Your choice: New Pokedex created for ubuntu with starter Squirtle.
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice: Your name: Choose Starter:
+1. Bulbasaur
+2. Charmander
+3. Squirtle
+Your choice: New Pokedex created for e$% with starter Charmander.
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice: Your name: Choose Starter:
+1. Bulbasaur
+2. Charmander
+3. Squirtle
+Your choice: New Pokedex created for o*&^~ with starter Bulbasaur.
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice: Owners sorted by name.
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice: Enter direction (F or B): How many prints? [1] e$%
+[2] k+#
+[3] o*&^~
+[4] ubuntu
+[5] e$%
+[6] k+#
+[7] o*&^~
+[8] ubuntu
+[9] e$%
+[10] k+#
+[11] o*&^~
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice: Goodbye!

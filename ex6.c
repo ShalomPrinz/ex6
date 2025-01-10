@@ -100,6 +100,23 @@ int readIntSafe(const char *prompt) {
     return value;
 }
 
+/**
+ * @brief Reads a single char from user's input and clears the buffer.
+ * @param prompt message to user
+ * @return first's user input char which is not a whitespace
+ */
+char readCharSafe(const char* prompt) {
+    printf("%s", prompt);
+    // Clear all whitespaces and then read a single char
+    char ch;
+    scanf(" %c", &ch);
+
+    // Clear the buffer from all chars until reached '\n'
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF) {}
+    return ch;
+}
+
 // TODO why not set enum values to string? ...
 // --------------------------------------------------------------
 // 2) Utility: Get type name from enum
@@ -274,25 +291,88 @@ void displayMenu(OwnerNode *owner) {
 //     } while (subChoice != 6);
 // }
 
+/**
+ * @brief Swap data between given nodes.
+ * @param first owner node 1
+ * @param second owner node 2
+ * @note Only data is swapped to keep original list structure, which is much more complicated to change
+ */
+void swap(OwnerNode* first, OwnerNode* second) {
+    // Swap owners names
+    char* temp = first->ownerName;
+    first->ownerName = second->ownerName;
+    second->ownerName = temp;
+
+    // Swap owners pokedexes
+    PokemonNode* pokedex = first->pokedexRoot;
+    first->pokedexRoot = second->pokedexRoot;
+    second->pokedexRoot = pokedex;
+}
+
+/**
+ * @brief Implementation of insertion sort algorithm to sort owners list
+ */
+void insertionSortOwners() {
+    // New head of list
+    OwnerNode* start = ownerHead;
+    OwnerNode* end = ownerHead;
+
+    // Iterate all owners
+    do {
+        // Start at last owner and move 1 step backward each iteration
+        end = end->prev;
+        // Start at first owner each iteration
+        OwnerNode* current = start;
+
+        // Iterate from first owner to current end owner
+        while (current != end) {
+            // If next owner should be before current owner, swap them
+            if (strcmp(current->ownerName, current->next->ownerName) > 0)
+                swap(current, current->next);
+
+            // Move to next owner - 1 step forward
+            current = current->next;
+        }
+    } while (end != start);
+
+    // Set ownerHead to point to the sorted owners list
+    ownerHead = start;
+}
+void sortOwners() {
+    // Don't sort if there are no owners at all
+    if (ownerHead == NULL) {
+        printf("0 or 1 owners only => no need to sort.\n");
+        return;
+    }
+
+    // Sort only if there is more then one node in list
+    if (ownerHead->next != ownerHead)
+        insertionSortOwners();
+    printf("Owners sorted by name.\n");
+}
+
+/**
+ * @brief Prints X owners names, starting at head and moving forward or backward.
+ * Direction and X times are determined by user input.
+ */
 void printOwnersCircular() {
+    // No owners to print
     if (ownerHead == NULL) {
         printf("No owners.\n");
         return;
     }
 
-    // TODO currently assuming input is valid + scanf is quite weird
-    printf("Enter direction (F or B): ");
-    char c;
-    scanf(" %c", &c);
+    // Input print count and movement direction
+    char c = readCharSafe("Enter direction (F or B): ");
+    int count = readIntSafe("How many prints? ");
 
-    printf("How many prints? ");
-    int count;
-    scanf("%d ", &count);
-
+    // Start at head, move 1 step in chosen direction until reached count times
     OwnerNode *current = ownerHead;
     for (int i = 1; i <= count; i++) {
         printf("[%d] %s\n", i, current->ownerName);
-        current = c == 'F' ? current->next : current->prev;
+        // If chosen direction isn't 'F' or 'f', default to backward direction
+        // TODO does it match required behavior?
+        current = (c == 'F' || c == 'f') ? current->next : current->prev;
     }
 }
 
@@ -424,7 +504,7 @@ void mainMenu() {
                 // mergePokedexMenu();
                 break;
             case 5:
-                // sortOwners();
+                sortOwners();
                 break;
             case 6:
                 printOwnersCircular();
