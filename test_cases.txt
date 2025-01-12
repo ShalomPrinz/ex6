@@ -1460,3 +1460,553 @@ Your choice: Back to Main Menu.
 6. Print Owners in a direction X times
 7. Exit
 Your choice: Goodbye!
+
+- name: remove starter and fight
+  input: |
+1
+fight?
+1
+2
+1
+3
+1
+4
+6
+7
+  output: |
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice: Your name: Choose Starter:
+1. Bulbasaur
+2. Charmander
+3. Squirtle
+Your choice: New Pokedex created for fight? with starter Bulbasaur.
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice:
+Existing Pokedexes:
+1. fight?
+Choose a Pokedex by number:
+Entering fight?'s Pokedex...
+
+-- fight?'s Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Enter Pokemon ID to release: Removing Pokemon Bulbasaur (ID 1).
+
+-- fight?'s Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Pokedex is empty.
+
+-- fight?'s Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Back to Main Menu.
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice: Goodbye!
+
+- name: remove starter from pokedex and display
+  input: |
+1
+star
+1
+2
+1
+3
+1
+2
+6
+7
+  output: |
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice: Your name: Choose Starter:
+1. Bulbasaur
+2. Charmander
+3. Squirtle
+Your choice: New Pokedex created for star with starter Bulbasaur.
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice:
+Existing Pokedexes:
+1. star
+Choose a Pokedex by number:
+Entering star's Pokedex...
+
+-- star's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Enter Pokemon ID to release: Removing Pokemon Bulbasaur (ID 1).
+
+-- star's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Pokedex is empty.
+
+-- star's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Back to Main Menu.
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice: Goodbye!
+
+- name: remove ID 0, remove starter, try remove again
+  input: |
+1
+star
+1
+2
+1
+3
+0
+3
+1
+3
+6
+7
+  output: |
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice: Your name: Choose Starter:
+1. Bulbasaur
+2. Charmander
+3. Squirtle
+Your choice: New Pokedex created for star with starter Bulbasaur.
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice:
+Existing Pokedexes:
+1. star
+Choose a Pokedex by number:
+Entering star's Pokedex...
+
+-- star's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Enter Pokemon ID to release: No Pokemon with ID 0 found.
+
+-- star's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Enter Pokemon ID to release: Removing Pokemon Bulbasaur (ID 1).
+
+-- star's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: No Pokemon to release.
+
+-- star's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Back to Main Menu.
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice: Goodbye!
+
+- name: add + remove child (leaf) + display, add2 + remove child (1 child) + display
+  input: |
+1
+remo
+3
+2
+1
+1
+5
+3
+5
+2
+1
+1
+4
+1
+2
+3
+4
+2
+1
+6
+7
+  output: |
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice: Your name: Choose Starter:
+1. Bulbasaur
+2. Charmander
+3. Squirtle
+Your choice: New Pokedex created for remo with starter Squirtle.
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice:
+Existing Pokedexes:
+1. remo
+Choose a Pokedex by number:
+Entering remo's Pokedex...
+
+-- remo's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Enter ID to add: Pokemon Charmeleon (ID 5) added.
+
+-- remo's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Enter Pokemon ID to release: Removing Pokemon Charmeleon (ID 5).
+
+-- remo's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Display:
+1. BFS (Level-Order)
+2. Pre-Order
+3. In-Order
+4. Post-Order
+5. Alphabetical (by name)
+Your choice: ID: 7, Name: Squirtle, Type: WATER, HP: 44, Attack: 48, Can Evolve: Yes
+
+-- remo's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Enter ID to add: Pokemon Charmander (ID 4) added.
+
+-- remo's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Enter ID to add: Pokemon Ivysaur (ID 2) added.
+
+-- remo's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Enter Pokemon ID to release: Removing Pokemon Charmander (ID 4).
+
+-- remo's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Display:
+1. BFS (Level-Order)
+2. Pre-Order
+3. In-Order
+4. Post-Order
+5. Alphabetical (by name)
+Your choice: ID: 7, Name: Squirtle, Type: WATER, HP: 44, Attack: 48, Can Evolve: Yes
+ID: 2, Name: Ivysaur, Type: GRASS, HP: 60, Attack: 62, Can Evolve: Yes
+
+-- remo's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Back to Main Menu.
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice: Goodbye!
+
+- name: add4, display, remove child (2 children), display
+  input: |
+1
+happiness
+3
+2
+1
+1
+4
+1
+3
+1
+6
+1
+5
+2
+1
+3
+4
+2
+1
+6
+7
+  output: |
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice: Your name: Choose Starter:
+1. Bulbasaur
+2. Charmander
+3. Squirtle
+Your choice: New Pokedex created for happiness with starter Squirtle.
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice:
+Existing Pokedexes:
+1. happiness
+Choose a Pokedex by number:
+Entering happiness's Pokedex...
+
+-- happiness's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Enter ID to add: Pokemon Charmander (ID 4) added.
+
+-- happiness's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Enter ID to add: Pokemon Venusaur (ID 3) added.
+
+-- happiness's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Enter ID to add: Pokemon Charizard (ID 6) added.
+
+-- happiness's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Enter ID to add: Pokemon Charmeleon (ID 5) added.
+
+-- happiness's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Display:
+1. BFS (Level-Order)
+2. Pre-Order
+3. In-Order
+4. Post-Order
+5. Alphabetical (by name)
+Your choice: ID: 7, Name: Squirtle, Type: WATER, HP: 44, Attack: 48, Can Evolve: Yes
+ID: 4, Name: Charmander, Type: FIRE, HP: 39, Attack: 52, Can Evolve: Yes
+ID: 3, Name: Venusaur, Type: GRASS, HP: 80, Attack: 82, Can Evolve: No
+ID: 6, Name: Charizard, Type: FIRE, HP: 78, Attack: 84, Can Evolve: No
+ID: 5, Name: Charmeleon, Type: FIRE, HP: 58, Attack: 64, Can Evolve: Yes
+
+-- happiness's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Enter Pokemon ID to release: Removing Pokemon Charmander (ID 4).
+
+-- happiness's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Display:
+1. BFS (Level-Order)
+2. Pre-Order
+3. In-Order
+4. Post-Order
+5. Alphabetical (by name)
+Your choice: ID: 7, Name: Squirtle, Type: WATER, HP: 44, Attack: 48, Can Evolve: Yes
+ID: 5, Name: Charmeleon, Type: FIRE, HP: 58, Attack: 64, Can Evolve: Yes
+ID: 3, Name: Venusaur, Type: GRASS, HP: 80, Attack: 82, Can Evolve: No
+ID: 6, Name: Charizard, Type: FIRE, HP: 78, Attack: 84, Can Evolve: No
+
+-- happiness's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Back to Main Menu.
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice: Goodbye!

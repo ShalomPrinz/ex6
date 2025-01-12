@@ -15,6 +15,11 @@
 
 // TODO malloc / realloc should be done with cast?
 
+// TODO should i handle root removal scenario?
+
+// TODO important - after implement remove pokemon, test all relevant which is a lot, e.g.
+// - fight,
+
 // ================================================
 // Basic struct definitions from ex6.h assumed:
 //   PokemonData { int id; char *name; PokemonType TYPE; int hp; int attack; EvolutionStatus CAN_EVOLVE; }
@@ -411,6 +416,10 @@ int isEmptyQueue(PokemonQueue *queue) {
  * @param data data of new queue node
  */
 void queueInsert(PokemonQueue* queue, PokemonNode* data) {
+    // Don't insert empty node into queue
+    if (data == NULL)
+        return;
+
     // Allocate new queue node
     PokemonQueueNode* newQNode = createPokemonQueueNode(data);
     if (newQNode == NULL)
@@ -614,6 +623,83 @@ PokemonNode *searchPokemonBFS(PokemonNode *root, int id) {
     return NULL;
 }
 
+/**
+ * @brief Returns minimum child of root, assuming BST is balanced.
+ * @param root node to start search from
+ * @return minimum value child of root
+ */
+PokemonNode *findMin(PokemonNode *root) {
+    // Traverse to most-left child of root
+    while (root->left != NULL)
+        root = root->left;
+
+    // Return most-left child (minimum child)
+    return root;
+}
+
+PokemonNode *removeNodeBST(PokemonNode *root, int id) {
+    // Base case: if root is NULL, the node to remove isn't on this branch
+    if (root == NULL)
+        return NULL;
+
+    // Traverse the tree (post-order) to find the node to remove
+    if (id < root->data->id) {
+        // Traverse to root left child
+        root->left = removeNodeBST(root->left, id);
+    } else if (id > root->data->id) {
+        // Traverse to root right child
+        root->right = removeNodeBST(root->right, id);
+    } else {
+        // Root is the node that should be removed
+        if (root->left == NULL) {
+            // Root has only right child, or no children at all
+            PokemonNode* rightChild = root->right;
+            freePokemonNode(root);
+            return rightChild;
+        } else if (root->right == NULL) {
+            // Root has only left child
+            PokemonNode* leftChild = root->left;
+            freePokemonNode(root);
+            return leftChild;
+        }
+
+        // Root has two children: find successor to replace him
+        PokemonNode* successor = findMin(root->right);
+
+        // Replace root's data with its successor's data
+        root->data = successor->data;
+
+        // Remove the successor node
+        root->right = removeNodeBST(root->right, successor->data->id);
+    }
+
+    // Return root as new pokedex root
+    return root;
+}
+
+void freePokemon(OwnerNode *owner) {
+    // If no pokemons at pokedex, don't even input an ID
+    if (owner->pokedexRoot == NULL) {
+        printf("No Pokemon to release.\n");
+        return;
+    }
+
+    // Input pokemon ID to release from pokedex
+    int pokemonID = readIntSafe("Enter Pokemon ID to release: ");
+
+    // Search for a pokemon with chosen ID in pokedex
+    PokemonNode *pokemonNode = searchPokemonBFS(owner->pokedexRoot, pokemonID);
+    if (pokemonNode == NULL) {
+        printf("No Pokemon with ID %d found.\n", pokemonID);
+        return;
+    }
+
+    // Remove chosen pokemon from pokedex
+    printf("Removing Pokemon %s (ID %d).\n", pokemonNode->data->name, pokemonID);
+    PokemonNode *newPokedexRoot = removeNodeBST(owner->pokedexRoot, pokemonID);
+    owner->pokedexRoot = newPokedexRoot;
+}
+
 void addPokemon(OwnerNode *owner) {
     int pokemonID = readIntSafe("Enter ID to add: ");
     if (pokemonID < 1 || pokemonID > LAST_POKEMON_ID) {
@@ -649,16 +735,18 @@ void freePokemonTree(PokemonNode *root) {
     BFSGeneric(root, freePokemonNode);
 }
 
-// void freePokemon(OwnerNode *owner) {
-//     int pokemonID = readIntSafe("Enter Pokemon ID to release: ");
-//     removeNodeBST(owner->pokedexRoot, pokemonID);
-// }
-
 float calcualatePokemonScore(PokemonData *pokemon) {
+    // TODO ignore warning here?
     return (float) pokemon->attack * FIGHT_ATTACK_FACTOR + pokemon->hp * FIGHT_HP_FACTOR;
 }
 
 void pokemonFight(OwnerNode *owner) {
+    // If pokedex is empty, don't even attempt to have a pokemon fight
+    if (owner->pokedexRoot == NULL) {
+        printf("Pokedex is empty.\n");
+        return;
+    }
+
     // Input two pokemon IDs
     int firstID = readIntSafe("Enter ID of the first Pokemon: ");
     int secondID = readIntSafe("Enter ID of the second Pokemon: ");
@@ -723,7 +811,7 @@ void enterExistingPokedexMenu() {
                 displayMenu(pokedex);
                 break;
             case 3:
-                // freePokemon(pokedex);
+                freePokemon(pokedex);
                 break;
             case 4:
                 pokemonFight(pokedex);
