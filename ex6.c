@@ -105,7 +105,7 @@ int readIntSafe(const char *prompt) {
  * @param prompt message to user
  * @return first's user input char which is not a whitespace
  */
-char readCharSafe(const char* prompt) {
+char readCharSafe(char* prompt) {
     printf("%s", prompt);
     // Clear all whitespaces and then read a single char
     char ch;
@@ -225,7 +225,7 @@ void displayMenu(OwnerNode *owner) {
 
     switch (choice) {
         case 1:
-            // displayBFS(owner->pokedexRoot);
+            displayBFS(owner->pokedexRoot);
             break;
         case 2:
             // preOrderTraversal(owner->pokedexRoot);
@@ -244,52 +244,291 @@ void displayMenu(OwnerNode *owner) {
     }
 }
 
+void displayBFS(PokemonNode *root) {
+    BFSGeneric(root, printPokemonNode);
+}
+
+OwnerNode *choosePokedex(char *prompt) {
+    OwnerNode *currentOwner = ownerHead;
+    int ownerIndex = 1;
+    do {
+        // Print each pokedex in this format, then move on to next pokedex
+        printf("%d. %s\n", ownerIndex++, currentOwner->ownerName);
+        currentOwner = currentOwner->next;
+    } while (currentOwner != ownerHead);
+
+    // Input an owner index
+    int choice = readIntSafe(prompt);
+
+    // Reset values for another loop, in order to reach chosen owner
+    currentOwner = ownerHead;
+    ownerIndex = 0;
+
+    // Loop until ownerIndex equals choice
+    while (choice > ++ownerIndex)
+        currentOwner = currentOwner->next;
+
+    return currentOwner;
+}
+
+// TODO move. h? up?
+#define LAST_POKEMON_ID 151
+
+// --------------------------------------------------------------
+// Queue Implementation
+// --------------------------------------------------------------
+
+typedef struct PokemonQueueNode {
+    PokemonNode *node;
+    struct PokemonQueueNode *next;
+} PokemonQueueNode;
+
+typedef struct PokemonQueue {
+    PokemonQueueNode *front, *rear;
+} PokemonQueue;
+
+/**
+ * @brief Create new queue node from a given pokemon node.
+ * @param node pokemon node to create queue node from
+ * @return newly allocated pokemon queue node
+ */
+PokemonQueueNode *createPokemonQueueNode(PokemonNode *node) {
+    // Allocate new queue node
+    PokemonQueueNode *queueNode = malloc(sizeof(PokemonQueueNode));
+    if (!queueNode) {
+        printf("Memory allocation failed.\n");
+        return NULL;
+    }
+
+    // Init queue node with default values and return it
+    queueNode->node = node;
+    queueNode->next = NULL;
+    return queueNode;
+}
+
+/**
+ * @param queue queue to check if empty
+ * @return whether given queue is empty
+ */
+int isEmptyQueue(PokemonQueue *queue) {
+    return queue == NULL || queue->front == NULL;
+}
+
+/**
+ * @brief Inserts new queue node that with given data into given queue.
+ * @param queue queue to insert new node into
+ * @param data data of new queue node
+ */
+void queueInsert(PokemonQueue* queue, PokemonNode* data) {
+    // Allocate new queue node
+    PokemonQueueNode* newQNode = createPokemonQueueNode(data);
+    if (newQNode == NULL)
+        return;
+
+    // If queue is empty, new queue node is both front and rear of the queue
+    if (queue->rear == NULL) {
+        queue->front = newQNode;
+        queue->rear = newQNode;
+        return;
+    }
+
+    // If queue isn't empty, new queue node is now rear of the queue
+    queue->rear->next = newQNode;
+    queue->rear = newQNode;
+}
+
+/**
+ * @brief Pops first queue node from given queue.
+ * @param queue queue to remove node from
+ * @return popped queue node or NULL if no nodes in queue
+ */
+PokemonNode *queuePop(PokemonQueue* queue) {
+    // Return NULL if no nodes in queue
+    if (queue->front == NULL)
+        return NULL;
+
+    // Pop first queue node and move front pointer one step forward
+    PokemonQueueNode* queueNode = queue->front;
+    PokemonNode* data = queueNode->node;
+    queue->front = queue->front->next;
+
+    // ? TODO
+    if (queue->front == NULL)
+        queue->rear = NULL;
+
+    // Free popped queue node and return its data
+    free(queueNode);
+    return data;
+}
+
+void BFSGeneric(PokemonNode *root, VisitNodeFunc visit) {
+    // Allocate queue
+    PokemonQueue *queue = malloc(sizeof(PokemonQueue));
+    if (!queue) {
+        printf("Memory allocation failed.\n");
+        return;
+    }
+
+    // Init queue with root pokemon node
+    queue->front = NULL;
+    queue->rear = NULL;
+    queueInsert(queue, root);
+
+    // Iterate BFS style on given root
+    while (!isEmptyQueue(queue)) {
+        // Save front QNode from queue
+        PokemonNode *current = queuePop(queue);
+
+        // If current node has left child, add it to queue and visit it later
+        if (current->left)
+            queueInsert(queue, current->left);
+
+        // If current node has right child, add it to queue and visit it later
+        if (current->right)
+            queueInsert(queue, current->right);
+
+        // Visit current node
+        visit(current);
+    }
+
+    // Finish BFS, free queue
+    free(queue);
+}
+
+PokemonNode *createPokemonNode(const PokemonData *data) {
+    // Allocate memory for new pokemon node
+    PokemonNode *newNode = malloc(sizeof(PokemonNode));
+    if (newNode == NULL) {
+        printf("Memory allocation failed.\n");
+        return NULL;
+    }
+
+    // Init pokemon node with default values and return it
+    newNode->left = NULL;
+    newNode->right = NULL;
+    newNode->data = (PokemonData*) data; // TODO not allocating, think if it's right
+    return newNode;
+}
+
+PokemonNode *insertPokemonNode(PokemonNode *root, PokemonNode *newNode) {
+    // If pokedex is empty, start pokedex with given node
+    if (root == NULL)
+        return newNode;
+
+    // DFS TODO document. maybe use generic dfs func
+    PokemonNode *current = root;
+    while (current != NULL) {
+        if (current->data->id > newNode->data->id) {
+            if (current->left == NULL) {
+                current->left = newNode;
+                return root;
+            }
+            current = current->left;
+            continue;
+        }
+
+        if (current->data->id < newNode->data->id) {
+            if (current->right == NULL) {
+                current->right = newNode;
+                return root;
+            }
+            current = current->right;
+            continue;
+        }
+
+        // Duplicate! TODO implemented differently..
+        return NULL;
+    }
+
+    // TODO redundant?
+    return root;
+}
+
+void addPokemon(OwnerNode *owner) {
+    int pokemonID = readIntSafe("Enter ID to add: ");
+    if (pokemonID < 1 || pokemonID > LAST_POKEMON_ID) {
+        printf("Invalid ID.\n");
+        return;
+    }
+
+    // Allocate new pokemon node
+    PokemonData *pokemon = (PokemonData *) &pokedex[pokemonID - 1];
+    PokemonNode *newNode = createPokemonNode(pokemon);
+    if (newNode == NULL)
+        return;
+
+    // Replace pokedex root with new root which includes new node
+    PokemonNode *newRoot = insertPokemonNode(owner->pokedexRoot, newNode);
+    if (newRoot == NULL) {
+        printf("Pokemon with ID %d is already in the Pokedex. No changes made.\n", pokemonID);
+        free(newNode);
+        return;
+    }
+
+    // Successfully inserted pokemon to pokedex
+    owner->pokedexRoot = newRoot;
+    printf("Pokemon %s (ID %d) added.\n", pokemon->name, pokemonID);
+}
+
+// TODO currently free node only because pokemon isn't allocated
+void freePokemonNode(PokemonNode *node) {
+    free(node);
+}
+
+void freePokemonTree(PokemonNode *root) {
+    BFSGeneric(root, freePokemonNode);
+}
+
 // --------------------------------------------------------------
 // Sub-menu for existing Pokedex
 // --------------------------------------------------------------
-// void enterExistingPokedexMenu() {
-//     // list owners
-//     printf("\nExisting Pokedexes:\n");
-//     // you need to implement a few things here :)
-//
-//     printf("\nEntering %s's Pokedex...\n", cur->ownerName);
-//
-//     int subChoice;
-//     do {
-//         printf("\n-- %s's Pokedex Menu --\n", cur->ownerName);
-//         printf("1. Add Pokemon\n");
-//         printf("2. Display Pokedex\n");
-//         printf("3. Release Pokemon (by ID)\n");
-//         printf("4. Pokemon Fight!\n");
-//         printf("5. Evolve Pokemon\n");
-//         printf("6. Back to Main\n");
-//
-//         subChoice = readIntSafe("Your choice: ");
-//
-//         switch (subChoice) {
-//             case 1:
-//                 addPokemon(cur);
-//                 break;
-//             case 2:
-//                 displayMenu(cur);
-//                 break;
-//             case 3:
-//                 freePokemon(cur);
-//                 break;
-//             case 4:
-//                 pokemonFight(cur);
-//                 break;
-//             case 5:
-//                 evolvePokemon(cur);
-//                 break;
-//             case 6:
-//                 printf("Back to Main Menu.\n");
-//                 break;
-//             default:
-//                 printf("Invalid choice.\n");
-//         }
-//     } while (subChoice != 6);
-// }
+void enterExistingPokedexMenu() {
+    // If there are no owners, there is no owner to choose
+    if (ownerHead == NULL) {
+        printf("No existing Pokedexes.\n");
+        return;
+    }
+
+    // Input a pokedex choice and enter its menu
+    printf("\nExisting Pokedexes:\n");
+    OwnerNode* pokedex = choosePokedex("Choose a Pokedex by number: ");
+    printf("\nEntering %s's Pokedex...\n", pokedex->ownerName);
+
+    int subChoice;
+    do {
+        printf("\n-- %s's Pokedex Menu --\n", pokedex->ownerName);
+        printf("1. Add Pokemon\n");
+        printf("2. Display Pokedex\n");
+        printf("3. Release Pokemon (by ID)\n");
+        printf("4. Pokemon Fight!\n");
+        printf("5. Evolve Pokemon\n");
+        printf("6. Back to Main\n");
+
+        subChoice = readIntSafe("Your choice: ");
+        switch (subChoice) {
+            case 1:
+                addPokemon(pokedex);
+                break;
+            case 2:
+                displayMenu(pokedex);
+                break;
+            case 3:
+                // freePokemon(pokedex);
+                break;
+            case 4:
+                // pokemonFight(pokedex);
+                break;
+            case 5:
+                // evolvePokemon(pokedex);
+                break;
+            case 6:
+                printf("Back to Main Menu.\n");
+                break;
+            default:
+                printf("Invalid choice.\n");
+        }
+    } while (subChoice != 6);
+}
 
 /**
  * @brief Swap data between given nodes.
@@ -370,9 +609,11 @@ void printOwnersCircular() {
     OwnerNode *current = ownerHead;
     for (int i = 1; i <= count; i++) {
         printf("[%d] %s\n", i, current->ownerName);
-        // If chosen direction isn't 'F' or 'f', default to backward direction
-        // TODO does it match required behavior?
-        current = (c == 'F' || c == 'f') ? current->next : current->prev;
+        /*
+         If chosen direction isn't 'F' or 'f', default to backward direction
+         (Assuming input is valid - only f / F / b / B)
+        */
+        current = c == 'F' || c == 'f' ? current->next : current->prev;
     }
 }
 
@@ -419,7 +660,7 @@ OwnerNode *createOwner(char *ownerName, PokemonNode *starter) {
 
     // Fill newOwner's data with given data
     newOwner->ownerName = ownerName;
-    newOwner->pokedexRoot = starter;
+    newOwner->pokedexRoot = insertPokemonNode(NULL, starter);
     return newOwner;
 }
 
@@ -495,7 +736,7 @@ void mainMenu() {
                 openPokedexMenu();
                 break;
             case 2:
-                // enterExistingPokedexMenu();
+                enterExistingPokedexMenu();
                 break;
             case 3:
                 deletePokedex();
@@ -518,11 +759,7 @@ void mainMenu() {
     } while (choice != 7);
 }
 
-/**
- * @brief Removes owner from owners list and frees it
- * @param owner owner to remove
- */
-void removeOwner(OwnerNode* owner) {
+void freeOwnerNode(OwnerNode *owner) {
     if (owner->next != owner) {
         // Connect prev of owner to its next
         owner->next->prev = owner->prev;
@@ -533,7 +770,7 @@ void removeOwner(OwnerNode* owner) {
     owner->next = NULL;
     owner->prev = NULL;
     free(owner->ownerName);
-    free(owner->pokedexRoot); // TODO implement
+    freePokemonTree(owner->pokedexRoot);
     free(owner);
 }
 
@@ -546,12 +783,12 @@ void freeAllOwners() {
     OwnerNode *current = ownerHead;
     while (current != NULL && current != current->next) {
         OwnerNode *next = current->next;
-        removeOwner(current);
+        freeOwnerNode(current);
         current = next;
     }
 
     // Remove last remaining owner
-    removeOwner(current);
+    freeOwnerNode(current);
 
     // Reset ownerHead to NULL as required
     ownerHead = NULL;
@@ -565,22 +802,8 @@ void deletePokedex() {
 
     // Print all pokedexes with indices by their order
     printf("\n=== Delete a Pokedex ===\n");
-    OwnerNode *currentOwner = ownerHead;
-    int ownerIndex = 1;
-    do {
-        // Print each pokedex in this format, then move on to next pokedex
-        printf("%d. %s\n", ownerIndex++, currentOwner->ownerName);
-        currentOwner = currentOwner->next;
-    } while (currentOwner != ownerHead);
 
-    // Input an owner to delete (by its index)
-    int choice = readIntSafe("Choose a Pokedex to delete by number: ");
-    // Reset values for another loop, in order to reach
-    currentOwner = ownerHead;
-    ownerIndex = 0;
-    // Loop until ownerIndex equals choice
-    while (choice > ++ownerIndex)
-        currentOwner = currentOwner->next;
+    OwnerNode *currentOwner = choosePokedex("Choose a Pokedex to delete by number: ");
 
     // Remove chosen owner from owners list
     printf("Deleting %s's entire Pokedex...\n", currentOwner->ownerName);
@@ -589,7 +812,7 @@ void deletePokedex() {
      It should be NULL if there is only one owner, otherwise simply the next owner
     */
     OwnerNode* nextOwner = ownerHead == ownerHead->next ? NULL : ownerHead->next;
-    removeOwner(currentOwner);
+    freeOwnerNode(currentOwner);
     printf("Pokedex deleted.\n");
 
     // If first pokedex was removed, set head to the second (which now becomes first)
