@@ -5,6 +5,8 @@
 #include <string.h>
 
 # define INT_BUFFER 128
+// TODO move. h? up?
+#define LAST_POKEMON_ID 151
 
 // TODO define all my new funcs in h file and copy func documentation
 
@@ -192,17 +194,27 @@ char *getDynamicInput() {
     return input;
 }
 
-// Function to print a single Pokemon node
-void printPokemonNode(PokemonNode *node) {
-    if (!node)
-        return;
+/**
+ * @brief Prints given pokemon data in required format.
+ * @param data pokemon data to print
+ */
+void printPokemonData(PokemonData *data) {
     printf("ID: %d, Name: %s, Type: %s, HP: %d, Attack: %d, Can Evolve: %s\n",
-           node->data->id,
-           node->data->name,
-           getTypeName(node->data->TYPE),
-           node->data->hp,
-           node->data->attack,
-           (node->data->CAN_EVOLVE == CAN_EVOLVE) ? "Yes" : "No");
+           data->id,
+           data->name,
+           getTypeName(data->TYPE),
+           data->hp,
+           data->attack,
+           data->CAN_EVOLVE == CAN_EVOLVE ? "Yes" : "No");
+}
+
+void printPokemonNode(PokemonNode *node) {
+    // If given node is NULL, don't print it
+    if (node == NULL)
+        return;
+
+    // Print pokemon node data
+    printPokemonData(node->data);
 }
 
 // --------------------------------------------------------------
@@ -237,7 +249,7 @@ void displayMenu(OwnerNode *owner) {
             postOrderTraversal(owner->pokedexRoot);
             break;
         case 5:
-            // displayAlphabetical(owner->pokedexRoot);
+            displayAlphabetical(owner->pokedexRoot);
             break;
         default:
             printf("Invalid choice.\n");
@@ -260,10 +272,71 @@ void postOrderTraversal(PokemonNode *root) {
     postOrderGeneric(root, printPokemonNode);
 }
 
-// void displayAlphabetical(PokemonNode *root) {
-//
-// }
+/**
+ * @brief Inserts all pokemons from given pokedex to a sorted pokemons array.
+ * @param root root pokemon node
+ * @param pokemons pointers array of pokemons
+ * Sorts pokemons alphabetically during insertion to pokemons array.
+ */
+void preOrderSort(PokemonNode *root, PokemonData **pokemons) {
+    // Base case: current BST node is NULL
+    if (root == NULL) return;
 
+    // Calculate insertion position and last pokemon index
+    int position = 0;
+    int lastIndex = 0;
+    while (pokemons[lastIndex] != NULL) {
+        // If current root pokemon's name should be after pokemon at position, increase pos by 1
+        if (strcmp(root->data->name, pokemons[position]->name) > 0)
+            position++;
+
+        // Unconditionally increase last index
+        lastIndex++;
+    }
+
+    // Move pokemons 1 step forward from insertion position till last pokemon
+    if (pokemons[position] != NULL) {
+        for (int i = lastIndex; i > position; i--)
+            pokemons[i] = pokemons[i - 1];
+    }
+
+    // Insert root pokemon's data to current insertion position
+    pokemons[position] = root->data;
+
+    // Recursively visit left child of root
+    preOrderSort(root->left, pokemons);
+    // Recursively visit right child of root
+    preOrderSort(root->right, pokemons);
+}
+
+void displayAlphabetical(PokemonNode *root) {
+    // Allocate pokemons pointers array
+    PokemonData **pokemons = malloc(sizeof(PokemonData*) * LAST_POKEMON_ID);
+    if (pokemons == NULL) {
+        printf("Memory allocation failed.\n");
+        return;
+    }
+
+    // Init pokemons pointers to NULL
+    for (int i = 0; i < LAST_POKEMON_ID; i++)
+        pokemons[i] = NULL;
+
+    // Insert all pokemons from pokedex to pokemons array, and sort during insertion
+    preOrderSort(root, pokemons);
+
+    // Print alphabetically sorted pokemons
+    for (int i = 0; pokemons[i] != NULL; i++)
+        printPokemonData(pokemons[i]);
+
+    // Free sorted pokemons array
+    free(pokemons);
+}
+
+/**
+ * @brief Inputs an owner from owners list.
+ * @param prompt message for choosing pokedex
+ * @return chosen pokedex
+ */
 OwnerNode *choosePokedex(char *prompt) {
     OwnerNode *currentOwner = ownerHead;
     int ownerIndex = 1;
@@ -286,9 +359,6 @@ OwnerNode *choosePokedex(char *prompt) {
 
     return currentOwner;
 }
-
-// TODO move. h? up?
-#define LAST_POKEMON_ID 151
 
 // --------------------------------------------------------------
 // Queue Implementation
@@ -587,22 +657,16 @@ void enterExistingPokedexMenu() {
     } while (subChoice != 6);
 }
 
-/**
- * @brief Swap data between given nodes.
- * @param first owner node 1
- * @param second owner node 2
- * @note Only data is swapped to keep original list structure, which is much more complicated to change
- */
-void swap(OwnerNode* first, OwnerNode* second) {
+void swapOwnerData(OwnerNode* a, OwnerNode* b) {
     // Swap owners names
-    char* temp = first->ownerName;
-    first->ownerName = second->ownerName;
-    second->ownerName = temp;
+    char* temp = a->ownerName;
+    a->ownerName = b->ownerName;
+    b->ownerName = temp;
 
     // Swap owners pokedexes
-    PokemonNode* pokedex = first->pokedexRoot;
-    first->pokedexRoot = second->pokedexRoot;
-    second->pokedexRoot = pokedex;
+    PokemonNode* pokedex = a->pokedexRoot;
+    a->pokedexRoot = b->pokedexRoot;
+    b->pokedexRoot = pokedex;
 }
 
 /**
@@ -624,7 +688,7 @@ void insertionSortOwners() {
         while (current != end) {
             // If next owner should be before current owner, swap them
             if (strcmp(current->ownerName, current->next->ownerName) > 0)
-                swap(current, current->next);
+                swapOwnerData(current, current->next);
 
             // Move to next owner - 1 step forward
             current = current->next;
@@ -634,6 +698,7 @@ void insertionSortOwners() {
     // Set ownerHead to point to the sorted owners list
     ownerHead = start;
 }
+
 void sortOwners() {
     // Don't sort if there are no owners at all
     if (ownerHead == NULL) {
