@@ -8,6 +8,9 @@
 // TODO move. h? up?
 #define LAST_POKEMON_ID 151
 
+#define FIGHT_ATTACK_FACTOR 1.5
+#define FIGHT_HP_FACTOR 1.2
+
 // TODO define all my new funcs in h file and copy func documentation
 
 // TODO malloc / realloc should be done with cast?
@@ -568,6 +571,49 @@ PokemonNode *insertPokemonNode(PokemonNode *root, PokemonNode *newNode) {
     return root;
 }
 
+PokemonNode *searchPokemonBFS(PokemonNode *root, int id) {
+    // Allocate queue
+    PokemonQueue *queue = malloc(sizeof(PokemonQueue));
+    if (!queue) {
+        printf("Memory allocation failed.\n");
+        return NULL;
+    }
+
+    // Init queue with root pokemon node
+    queue->front = NULL;
+    queue->rear = NULL;
+    queueInsert(queue, root);
+
+    // Iterate BFS style on given root
+    while (!isEmptyQueue(queue)) {
+        // Save front QNode from queue
+        PokemonNode *current = queuePop(queue);
+
+        // Visit current node
+        if (current->data->id == id) {
+            // Empty queue
+            while (!isEmptyQueue(queue))
+                queuePop(queue);
+
+            // Free queue and return pokemon with given id
+            free(queue);
+            return current;
+        }
+
+        // If current node has left child, add it to queue and visit it later
+        if (current->left)
+            queueInsert(queue, current->left);
+
+        // If current node has right child, add it to queue and visit it later
+        if (current->right)
+            queueInsert(queue, current->right);
+    }
+
+    // Free queue and return NULL as no pokemon with given id was found in given pokedex
+    free(queue);
+    return NULL;
+}
+
 void addPokemon(OwnerNode *owner) {
     int pokemonID = readIntSafe("Enter ID to add: ");
     if (pokemonID < 1 || pokemonID > LAST_POKEMON_ID) {
@@ -608,6 +654,41 @@ void freePokemonTree(PokemonNode *root) {
 //     removeNodeBST(owner->pokedexRoot, pokemonID);
 // }
 
+float calcualatePokemonScore(PokemonData *pokemon) {
+    return (float) pokemon->attack * FIGHT_ATTACK_FACTOR + pokemon->hp * FIGHT_HP_FACTOR;
+}
+
+void pokemonFight(OwnerNode *owner) {
+    // Input two pokemon IDs
+    int firstID = readIntSafe("Enter ID of the first Pokemon: ");
+    int secondID = readIntSafe("Enter ID of the second Pokemon: ");
+
+    // Search pokemons in pokedex
+    PokemonNode *firstPokemon = searchPokemonBFS(owner->pokedexRoot, firstID);
+    PokemonNode *secondPokemon = searchPokemonBFS(owner->pokedexRoot, secondID);
+
+    // Validate both pokemons exist in owner's pokedex
+    if (firstPokemon == NULL || secondPokemon == NULL) {
+        printf("One or both Pokemon IDs not found.\n");
+        return;
+    }
+
+    // Calculate chosen pokemons score
+    float firstScore = calcualatePokemonScore(firstPokemon->data);
+    float secondScore = calcualatePokemonScore(secondPokemon->data);
+
+    // Print fight statistics and result
+    printf("Pokemon 1: %s (Score = %.2f)\n", firstPokemon->data->name, firstScore);
+    printf("Pokemon 2: %s (Score = %.2f)\n", secondPokemon->data->name, secondScore);
+
+    if (firstScore > secondScore)
+        printf("%s wins!\n", firstPokemon->data->name);
+    else if (firstScore < secondScore)
+        printf("%s wins!\n", secondPokemon->data->name);
+    else
+        printf("It's a tie!\n");
+}
+
 // --------------------------------------------------------------
 // Sub-menu for existing Pokedex
 // --------------------------------------------------------------
@@ -645,7 +726,7 @@ void enterExistingPokedexMenu() {
                 // freePokemon(pokedex);
                 break;
             case 4:
-                // pokemonFight(pokedex);
+                pokemonFight(pokedex);
                 break;
             case 5:
                 // evolvePokemon(pokedex);

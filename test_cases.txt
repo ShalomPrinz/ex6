@@ -1339,3 +1339,124 @@ Your choice: Back to Main Menu.
 6. Print Owners in a direction X times
 7. Exit
 Your choice: Goodbye!
+
+- name: fight itself, fight both non-exist, fight one non-exist, add and fight different
+  input: |
+1
+fighter
+1
+2
+1
+4
+1
+1
+4
+0
+2
+4
+1
+2
+1
+2
+4
+1
+2
+6
+7
+  output: |
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice: Your name: Choose Starter:
+1. Bulbasaur
+2. Charmander
+3. Squirtle
+Your choice: New Pokedex created for fighter with starter Bulbasaur.
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice:
+Existing Pokedexes:
+1. fighter
+Choose a Pokedex by number:
+Entering fighter's Pokedex...
+
+-- fighter's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Enter ID of the first Pokemon: Enter ID of the second Pokemon: Pokemon 1: Bulbasaur (Score = 127.50)
+Pokemon 2: Bulbasaur (Score = 127.50)
+It's a tie!
+
+-- fighter's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Enter ID of the first Pokemon: Enter ID of the second Pokemon: One or both Pokemon IDs not found.
+
+-- fighter's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Enter ID of the first Pokemon: Enter ID of the second Pokemon: One or both Pokemon IDs not found.
+
+-- fighter's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Enter ID to add: Pokemon Ivysaur (ID 2) added.
+
+-- fighter's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Enter ID of the first Pokemon: Enter ID of the second Pokemon: Pokemon 1: Bulbasaur (Score = 127.50)
+Pokemon 2: Ivysaur (Score = 165.00)
+Ivysaur wins!
+
+-- fighter's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Back to Main Menu.
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice: Goodbye!
