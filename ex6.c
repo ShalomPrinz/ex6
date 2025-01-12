@@ -10,6 +10,8 @@
 
 // TODO define all my new funcs in h file and copy func documentation
 
+// TODO malloc / realloc should be done with cast?
+
 // ================================================
 // Basic struct definitions from ex6.h assumed:
 //   PokemonData { int id; char *name; PokemonType TYPE; int hp; int attack; EvolutionStatus CAN_EVOLVE; }
@@ -739,37 +741,41 @@ void printOwnersCircular() {
     }
 }
 
-/**
- * @param first first string
- * @param second second string
- * @return whether strings are equal, by using strcmp
- */
-int areStringsEqual(char *first, char *second) {
-    return strcmp(first, second) == 0;
-}
-
-/**
- * @param name owner name to validate
- * @return whether given name is a duplicate of any existing owner's name
- */
-int isDuplicatedOwnerName(char *name) {
-    // If no owners at all, duplication is not possible
+OwnerNode *findOwnerByName(const char *name) {
+    // If no owners at all, there is no owner with given name
     if (ownerHead == NULL)
-        return 0;
+        return NULL;
 
     // Iterate over all owners
     OwnerNode *currentOwner = ownerHead;
     do {
-        // Validate ownerName isn't duplicate of any existing owner
-        if (areStringsEqual(currentOwner->ownerName, name))
-            return 1; // name is a duplication of existing owner's name
+        // Check whether given name is current owner's name
+        if (strcmp(currentOwner->ownerName, name) == 0)
+            return currentOwner;
 
         // Move on to next owner in list
         currentOwner = currentOwner->next;
     } while (currentOwner != ownerHead);
 
-    // No duplication found
-    return 0;
+    // No owner found with given name;
+    return NULL;
+}
+
+void linkOwnerInCircularList(OwnerNode *newOwner) {
+    // If no owners yet, ownerHead should be newOwner, and point to itself from both directions
+    if (ownerHead == NULL) {
+        ownerHead = newOwner;
+        newOwner->next = newOwner;
+        newOwner->prev = newOwner;
+        return;
+    }
+
+    // Link newOwner to circular list by circular list logic
+    OwnerNode *lastOwner = ownerHead->prev;
+    lastOwner->next = newOwner;
+    ownerHead->prev = newOwner;
+    newOwner->next = ownerHead;
+    newOwner->prev = lastOwner;
 }
 
 OwnerNode *createOwner(char *ownerName, PokemonNode *starter) {
@@ -792,7 +798,7 @@ void openPokedexMenu() {
     char *name = getDynamicInput();
 
     // Validate name isn't duplicate of existing owner name
-    if (isDuplicatedOwnerName(name)) {
+    if (findOwnerByName(name) != NULL) {
         printf("Owner '%s' already exists. Not creating a new Pokedex.\n", name);
         free(name);
         return;
@@ -820,20 +826,8 @@ void openPokedexMenu() {
     if (newOwner == NULL)
         return;
 
-    if (ownerHead == NULL) {
-        // If no owners yet, ownerHead should be newOwner
-        ownerHead = newOwner;
-        newOwner->next = newOwner;
-        newOwner->prev = newOwner;
-    } else {
-        // Update circular list to match newly inserted newOwner
-        OwnerNode *lastOwner = ownerHead->prev;
-        lastOwner->next = newOwner;
-        ownerHead->prev = newOwner;
-        newOwner->next = ownerHead;
-        newOwner->prev = lastOwner;
-    }
-
+    // Link owner to circular list
+    linkOwnerInCircularList(newOwner);
     printf("New Pokedex created for %s with starter %s.\n", name, ownerPokedex->data->name);
 }
 
@@ -881,16 +875,18 @@ void mainMenu() {
     } while (choice != 7);
 }
 
-void freeOwnerNode(OwnerNode *owner) {
-    if (owner->next != owner) {
-        // Connect prev of owner to its next
-        owner->next->prev = owner->prev;
-        owner->prev->next = owner->next;
-    }
+void removeOwnerFromCircularList(OwnerNode *target) {
+    if (target->next == target) return;
 
-    // Reset and free owner properties
-    owner->next = NULL;
-    owner->prev = NULL;
+    // Connect prev of target to its next
+    target->next->prev = target->prev;
+    target->prev->next = target->next;
+}
+
+void freeOwnerNode(OwnerNode *owner) {
+    removeOwnerFromCircularList(owner);
+
+    // Free owner by its properties order
     free(owner->ownerName);
     freePokemonTree(owner->pokedexRoot);
     free(owner);

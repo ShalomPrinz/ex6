@@ -232,46 +232,6 @@ void printPokemonNode(PokemonNode *node);
    5) Display Methods (BFS, Pre, In, Post, Alphabetical)
    ------------------------------------------------------------ */
 
-// For alphabetical display, we collect all nodes in an array, then qsort by name
-typedef struct {
-    PokemonNode **nodes;
-    int size;
-    int capacity;
-} NodeArray;
-
-/**
- * @brief Initialize a NodeArray with given capacity.
- * @param na pointer to NodeArray
- * @param cap initial capacity
- * Why we made it: We store pointers to PokemonNodes for alphabetical sorting.
- */
-void initNodeArray(NodeArray *na, int cap);
-
-/**
- * @brief Add a PokemonNode pointer to NodeArray, realloc if needed.
- * @param na pointer to NodeArray
- * @param node pointer to the node
- * Why we made it: We want a dynamic list of BST nodes for sorting.
- */
-void addNode(NodeArray *na, PokemonNode *node);
-
-/**
- * @brief Recursively collect all nodes from the BST into a NodeArray.
- * @param root BST root
- * @param na pointer to NodeArray
- * Why we made it: We gather everything for qsort.
- */
-void collectAll(PokemonNode *root, NodeArray *na);
-
-/**
- * @brief Compare function for qsort (alphabetical by node->data->name).
- * @param a pointer to a pointer to PokemonNode
- * @param b pointer to a pointer to PokemonNode
- * @return -1, 0, or +1
- * Why we made it: Sorting by name for alphabetical display.
- */
-int compareByNameNode(const void *a, const void *b);
-
 /**
  * @brief BFS is nice, but alphabetical means we gather all nodes, sort by name, then print.
  * @param root BST root
