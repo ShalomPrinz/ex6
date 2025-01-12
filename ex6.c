@@ -228,13 +228,13 @@ void displayMenu(OwnerNode *owner) {
             displayBFS(owner->pokedexRoot);
             break;
         case 2:
-            // preOrderTraversal(owner->pokedexRoot);
+            preOrderTraversal(owner->pokedexRoot);
             break;
         case 3:
-            // inOrderTraversal(owner->pokedexRoot);
+            inOrderTraversal(owner->pokedexRoot);
             break;
         case 4:
-            // postOrderTraversal(owner->pokedexRoot);
+            postOrderTraversal(owner->pokedexRoot);
             break;
         case 5:
             // displayAlphabetical(owner->pokedexRoot);
@@ -247,6 +247,22 @@ void displayMenu(OwnerNode *owner) {
 void displayBFS(PokemonNode *root) {
     BFSGeneric(root, printPokemonNode);
 }
+
+void preOrderTraversal(PokemonNode *root) {
+    preOrderGeneric(root, printPokemonNode);
+}
+
+void inOrderTraversal(PokemonNode *root) {
+    inOrderGeneric(root, printPokemonNode);
+}
+
+void postOrderTraversal(PokemonNode *root) {
+    postOrderGeneric(root, printPokemonNode);
+}
+
+// void displayAlphabetical(PokemonNode *root) {
+//
+// }
 
 OwnerNode *choosePokedex(char *prompt) {
     OwnerNode *currentOwner = ownerHead;
@@ -395,6 +411,42 @@ void BFSGeneric(PokemonNode *root, VisitNodeFunc visit) {
     free(queue);
 }
 
+void preOrderGeneric(PokemonNode *root, VisitNodeFunc visit) {
+    // If current node is NULL, don't visit it
+    if (root == NULL) return;
+
+    // Visit given root node
+    visit(root);
+    // Visit left child
+    preOrderGeneric(root->left, visit);
+    // Visit right child
+    preOrderGeneric(root->right, visit);
+}
+
+void inOrderGeneric(PokemonNode *root, VisitNodeFunc visit) {
+    // If current node is NULL, don't visit it
+    if (root == NULL) return;
+
+    // Visit left child
+    inOrderGeneric(root->left, visit);
+    // Visit given root node
+    visit(root);
+    // Visit right child
+    inOrderGeneric(root->right, visit);
+}
+
+void postOrderGeneric(PokemonNode *root, VisitNodeFunc visit) {
+    // If current node is NULL, don't visit it
+    if (root == NULL) return;
+
+    // Visit left child
+    postOrderGeneric(root->left, visit);
+    // Visit right child
+    postOrderGeneric(root->right, visit);
+    // Visit given root node
+    visit(root);
+}
+
 PokemonNode *createPokemonNode(const PokemonData *data) {
     // Allocate memory for new pokemon node
     PokemonNode *newNode = malloc(sizeof(PokemonNode));
@@ -478,6 +530,11 @@ void freePokemonNode(PokemonNode *node) {
 void freePokemonTree(PokemonNode *root) {
     BFSGeneric(root, freePokemonNode);
 }
+
+// void freePokemon(OwnerNode *owner) {
+//     int pokemonID = readIntSafe("Enter Pokemon ID to release: ");
+//     removeNodeBST(owner->pokedexRoot, pokemonID);
+// }
 
 // --------------------------------------------------------------
 // Sub-menu for existing Pokedex

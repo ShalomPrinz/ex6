@@ -999,3 +999,302 @@ Your choice: Back to Main Menu.
 6. Print Owners in a direction X times
 7. Exit
 Your choice: Goodbye!
+
+- name: display, add 7 pokemons, display
+  input: |
+1
+pokedex
+3
+2
+1
+2
+1
+2
+2
+2
+3
+2
+4
+1
+13
+1
+11
+1
+15
+1
+4
+1
+2
+1
+3
+1
+1
+2
+1
+2
+2
+2
+3
+2
+4
+6
+7
+  output: |
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice: Your name: Choose Starter:
+1. Bulbasaur
+2. Charmander
+3. Squirtle
+Your choice: New Pokedex created for pokedex with starter Squirtle.
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice:
+Existing Pokedexes:
+1. pokedex
+Choose a Pokedex by number:
+Entering pokedex's Pokedex...
+
+-- pokedex's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Display:
+1. BFS (Level-Order)
+2. Pre-Order
+3. In-Order
+4. Post-Order
+5. Alphabetical (by name)
+Your choice: ID: 7, Name: Squirtle, Type: WATER, HP: 44, Attack: 48, Can Evolve: Yes
+
+-- pokedex's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Display:
+1. BFS (Level-Order)
+2. Pre-Order
+3. In-Order
+4. Post-Order
+5. Alphabetical (by name)
+Your choice: ID: 7, Name: Squirtle, Type: WATER, HP: 44, Attack: 48, Can Evolve: Yes
+
+-- pokedex's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Display:
+1. BFS (Level-Order)
+2. Pre-Order
+3. In-Order
+4. Post-Order
+5. Alphabetical (by name)
+Your choice: ID: 7, Name: Squirtle, Type: WATER, HP: 44, Attack: 48, Can Evolve: Yes
+
+-- pokedex's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Display:
+1. BFS (Level-Order)
+2. Pre-Order
+3. In-Order
+4. Post-Order
+5. Alphabetical (by name)
+Your choice: ID: 7, Name: Squirtle, Type: WATER, HP: 44, Attack: 48, Can Evolve: Yes
+
+-- pokedex's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Enter ID to add: Pokemon Weedle (ID 13) added.
+
+-- pokedex's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Enter ID to add: Pokemon Metapod (ID 11) added.
+
+-- pokedex's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Enter ID to add: Pokemon Beedrill (ID 15) added.
+
+-- pokedex's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Enter ID to add: Pokemon Charmander (ID 4) added.
+
+-- pokedex's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Enter ID to add: Pokemon Ivysaur (ID 2) added.
+
+-- pokedex's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Enter ID to add: Pokemon Venusaur (ID 3) added.
+
+-- pokedex's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Enter ID to add: Pokemon Bulbasaur (ID 1) added.
+
+-- pokedex's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Display:
+1. BFS (Level-Order)
+2. Pre-Order
+3. In-Order
+4. Post-Order
+5. Alphabetical (by name)
+Your choice: ID: 7, Name: Squirtle, Type: WATER, HP: 44, Attack: 48, Can Evolve: Yes
+ID: 4, Name: Charmander, Type: FIRE, HP: 39, Attack: 52, Can Evolve: Yes
+ID: 13, Name: Weedle, Type: BUG, HP: 40, Attack: 35, Can Evolve: Yes
+ID: 2, Name: Ivysaur, Type: GRASS, HP: 60, Attack: 62, Can Evolve: Yes
+ID: 11, Name: Metapod, Type: BUG, HP: 50, Attack: 20, Can Evolve: Yes
+ID: 15, Name: Beedrill, Type: BUG, HP: 65, Attack: 90, Can Evolve: No
+ID: 1, Name: Bulbasaur, Type: GRASS, HP: 45, Attack: 49, Can Evolve: Yes
+ID: 3, Name: Venusaur, Type: GRASS, HP: 80, Attack: 82, Can Evolve: No
+
+-- pokedex's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Display:
+1. BFS (Level-Order)
+2. Pre-Order
+3. In-Order
+4. Post-Order
+5. Alphabetical (by name)
+Your choice: ID: 7, Name: Squirtle, Type: WATER, HP: 44, Attack: 48, Can Evolve: Yes
+ID: 4, Name: Charmander, Type: FIRE, HP: 39, Attack: 52, Can Evolve: Yes
+ID: 2, Name: Ivysaur, Type: GRASS, HP: 60, Attack: 62, Can Evolve: Yes
+ID: 1, Name: Bulbasaur, Type: GRASS, HP: 45, Attack: 49, Can Evolve: Yes
+ID: 3, Name: Venusaur, Type: GRASS, HP: 80, Attack: 82, Can Evolve: No
+ID: 13, Name: Weedle, Type: BUG, HP: 40, Attack: 35, Can Evolve: Yes
+ID: 11, Name: Metapod, Type: BUG, HP: 50, Attack: 20, Can Evolve: Yes
+ID: 15, Name: Beedrill, Type: BUG, HP: 65, Attack: 90, Can Evolve: No
+
+-- pokedex's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Display:
+1. BFS (Level-Order)
+2. Pre-Order
+3. In-Order
+4. Post-Order
+5. Alphabetical (by name)
+Your choice: ID: 1, Name: Bulbasaur, Type: GRASS, HP: 45, Attack: 49, Can Evolve: Yes
+ID: 2, Name: Ivysaur, Type: GRASS, HP: 60, Attack: 62, Can Evolve: Yes
+ID: 3, Name: Venusaur, Type: GRASS, HP: 80, Attack: 82, Can Evolve: No
+ID: 4, Name: Charmander, Type: FIRE, HP: 39, Attack: 52, Can Evolve: Yes
+ID: 7, Name: Squirtle, Type: WATER, HP: 44, Attack: 48, Can Evolve: Yes
+ID: 11, Name: Metapod, Type: BUG, HP: 50, Attack: 20, Can Evolve: Yes
+ID: 13, Name: Weedle, Type: BUG, HP: 40, Attack: 35, Can Evolve: Yes
+ID: 15, Name: Beedrill, Type: BUG, HP: 65, Attack: 90, Can Evolve: No
+
+-- pokedex's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Display:
+1. BFS (Level-Order)
+2. Pre-Order
+3. In-Order
+4. Post-Order
+5. Alphabetical (by name)
+Your choice: ID: 1, Name: Bulbasaur, Type: GRASS, HP: 45, Attack: 49, Can Evolve: Yes
+ID: 3, Name: Venusaur, Type: GRASS, HP: 80, Attack: 82, Can Evolve: No
+ID: 2, Name: Ivysaur, Type: GRASS, HP: 60, Attack: 62, Can Evolve: Yes
+ID: 4, Name: Charmander, Type: FIRE, HP: 39, Attack: 52, Can Evolve: Yes
+ID: 11, Name: Metapod, Type: BUG, HP: 50, Attack: 20, Can Evolve: Yes
+ID: 15, Name: Beedrill, Type: BUG, HP: 65, Attack: 90, Can Evolve: No
+ID: 13, Name: Weedle, Type: BUG, HP: 40, Attack: 35, Can Evolve: Yes
+ID: 7, Name: Squirtle, Type: WATER, HP: 44, Attack: 48, Can Evolve: Yes
+
+-- pokedex's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Back to Main Menu.
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice: Goodbye!
