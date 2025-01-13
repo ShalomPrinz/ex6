@@ -6,6 +6,15 @@
 #include <stdlib.h>
 #include <string.h>
 
+// Integer input allowed length
+#define INT_BUFFER 128
+// Last pokemon id of available pokemons
+#define LAST_POKEMON_ID 151
+// Used in fight formula TODO allowed int with f in defines?
+#define FIGHT_ATTACK_FACTOR 1.5f
+// Used in fight formula
+#define FIGHT_HP_FACTOR 1.2f
+
 typedef enum {
     GRASS,
     FIRE,

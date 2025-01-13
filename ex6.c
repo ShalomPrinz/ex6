@@ -1,15 +1,4 @@
 #include "ex6.h"
-#include <ctype.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-# define INT_BUFFER 128
-// TODO move. h? up?
-#define LAST_POKEMON_ID 151
-
-#define FIGHT_ATTACK_FACTOR 1.5
-#define FIGHT_HP_FACTOR 1.2
 
 // TODO define all my new funcs in h file and copy func documentation
 
@@ -126,7 +115,6 @@ char readCharSafe(char* prompt) {
     return ch;
 }
 
-// TODO why not set enum values to string? ...
 // --------------------------------------------------------------
 // 2) Utility: Get type name from enum
 // --------------------------------------------------------------
@@ -449,7 +437,7 @@ PokemonNode *queuePop(PokemonQueue* queue) {
     PokemonNode* data = queueNode->node;
     queue->front = queue->front->next;
 
-    // ? TODO
+    // If queue's front is NULL, set queue's rear to NULL to make sure insert works correctly
     if (queue->front == NULL)
         queue->rear = NULL;
 
@@ -634,7 +622,6 @@ PokemonNode *findMin(PokemonNode *root) {
     return root;
 }
 
-// TODO change to iterative style -> print removing message inside func
 PokemonNode *removeNodeBST(PokemonNode *root, int id) {
     // Base case: if root is NULL, the node to remove isn't on this branch
     if (root == NULL)
@@ -648,20 +635,17 @@ PokemonNode *removeNodeBST(PokemonNode *root, int id) {
         // Traverse to root right child
         root->right = removeNodeBST(root->right, id);
     } else {
-        // Root is the node that should be removed
-        if (root->left == NULL) {
-            // Root has only right child, or no children at all
-            PokemonNode* rightChild = root->right;
+        // Found node with given id, and it has 1 or 0 children
+        if (root->left == NULL || root->right == NULL) {
+            // Removed node child becomes removed node's parent child / NULL if node has 0 children
+            PokemonNode *newChild = root->left != NULL ? root->left : root->right;
+            // Free removed node
             freePokemonNode(root);
-            return rightChild;
-        } else if (root->right == NULL) {
-            // Root has only left child
-            PokemonNode* leftChild = root->left;
-            freePokemonNode(root);
-            return leftChild;
+            // Return new child and replace removed node with it
+            return newChild;
         }
 
-        // Root has two children: find successor to replace him
+        // Found node has 2 children: find successor to replace him
         PokemonNode* successor = findMin(root->right);
 
         // Replace root's data with its successor's data
@@ -733,9 +717,13 @@ void freePokemonTree(PokemonNode *root) {
     BFSGeneric(root, freePokemonNode);
 }
 
+/**
+ * @brief Calculate given pokemon's score based on the fight formula: (attack * 1.5 + hp * 1.2).
+ * @param pokemon calculate its score
+ * @return given pokemon's score
+ */
 float calcualatePokemonScore(PokemonData *pokemon) {
-    // TODO ignore warning here?
-    return (float) pokemon->attack * FIGHT_ATTACK_FACTOR + pokemon->hp * FIGHT_HP_FACTOR;
+    return (float) pokemon->attack * FIGHT_ATTACK_FACTOR + (float) pokemon->hp * FIGHT_HP_FACTOR;
 }
 
 void pokemonFight(OwnerNode *owner) {
@@ -802,8 +790,7 @@ void evolvePokemon(OwnerNode *owner) {
         printf("Evolution ID %d (%s) already in the Pokedex. Releasing %s (ID %d).\n",
             evolvedID, evolvedPokemon->name, pokemonData->name, pokemonID);
 
-        // TODO when rewriting removeBST func it will be one line and return
-        // Remove old pokemon before its evolved form is inserted into pokedex
+        // Remove old pokemon and don't insert its evolved form
         printf("Removing Pokemon %s (ID %d).\n", pokemonData->name, pokemonID);
         owner->pokedexRoot = removeNodeBST(owner->pokedexRoot, pokemonID);
         return;
@@ -1008,6 +995,19 @@ OwnerNode *createOwner(char *ownerName, PokemonNode *starter) {
     return newOwner;
 }
 
+/**
+ * @brief Derives pokemon's index from user's choice by a formula.
+ * @param choice user's starter choice
+ * @return chosen pokemon's index in pokemons array
+ * Formula matches each possible choice correctly:
+ * 1. Bulbasaur     -> index: 0
+ * 2. Charmander    -> index: 3
+ * 3. Squirtle      -> index: 6
+ */
+int getStarterPokemonID(int choice) {
+    return (choice - 1) * 3;
+}
+
 void openPokedexMenu() {
     // Input owner name
     printf("Your name: ");
@@ -1020,10 +1020,10 @@ void openPokedexMenu() {
         return;
     }
 
-    // Input starter pokemon
+    // Input starter pokemon and calculate its index in pokemons array
     printf("Choose Starter:\n1. Bulbasaur\n2. Charmander\n3. Squirtle\n");
     int choice = readIntSafe("Your choice: ");
-    int pokemonIndex = (choice - 1) * 3; // TODO explain the formula
+    int pokemonIndex = getStarterPokemonID(choice);
 
     // Init new owner's pokedex
     PokemonNode *ownerPokedex = (PokemonNode *)malloc(sizeof(PokemonNode));
