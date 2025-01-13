@@ -15,10 +15,7 @@
 
 // TODO malloc / realloc should be done with cast?
 
-// TODO should i handle root removal scenario?
-
-// TODO important - after implement remove pokemon, test all relevant which is a lot, e.g.
-// - fight,
+// TODO should i handle root removal scenario? in pokedex -> pokemon remove
 
 // ================================================
 // Basic struct definitions from ex6.h assumed:
@@ -637,6 +634,7 @@ PokemonNode *findMin(PokemonNode *root) {
     return root;
 }
 
+// TODO change to iterative style -> print removing message inside func
 PokemonNode *removeNodeBST(PokemonNode *root, int id) {
     // Base case: if root is NULL, the node to remove isn't on this branch
     if (root == NULL)
@@ -777,6 +775,55 @@ void pokemonFight(OwnerNode *owner) {
         printf("It's a tie!\n");
 }
 
+void evolvePokemon(OwnerNode *owner) {
+    if (owner->pokedexRoot == NULL) {
+        printf("Cannot evolve. Pokedex empty.\n");
+        return;
+    }
+
+    int pokemonID = readIntSafe("Enter ID of Pokemon to evolve: ");
+
+    PokemonNode *pokemon = searchPokemonBFS(owner->pokedexRoot, pokemonID);
+    if (pokemon == NULL) {
+        printf("No Pokemon with ID %d found.\n", pokemonID);
+        return;
+    }
+
+    PokemonData *pokemonData = pokemon->data;
+    if (!pokemon->data->CAN_EVOLVE) {
+        printf("%s (ID %d) cannot evolve.\n", pokemonData->name, pokemonID);
+        return;
+    }
+
+    // Check if evolved pokemon already exists in pokedex
+    int evolvedID = pokemonID + 1;
+    PokemonData *evolvedPokemon = (PokemonData *) &pokedex[evolvedID - 1];
+    if (searchPokemonBFS(owner->pokedexRoot, evolvedID) != NULL) {
+        printf("Evolution ID %d (%s) already in the Pokedex. Releasing %s (ID %d).\n",
+            evolvedID, evolvedPokemon->name, pokemonData->name, pokemonID);
+
+        // TODO when rewriting removeBST func it will be one line and return
+        // Remove old pokemon before its evolved form is inserted into pokedex
+        printf("Removing Pokemon %s (ID %d).\n", pokemonData->name, pokemonID);
+        owner->pokedexRoot = removeNodeBST(owner->pokedexRoot, pokemonID);
+        return;
+    }
+
+    // Remove old pokemon before its evolved form is inserted into pokedex
+    printf("Removing Pokemon %s (ID %d).\n", pokemonData->name, pokemonID);
+    owner->pokedexRoot = removeNodeBST(owner->pokedexRoot, pokemonID);
+
+    // Create pokemon node with evolved pokemon data
+    PokemonNode *evolvedNode = createPokemonNode(evolvedPokemon);
+    if (evolvedNode == NULL)
+        return;
+
+    // Insert evolved pokemon into pokedex
+    owner->pokedexRoot = insertPokemonNode(owner->pokedexRoot, evolvedNode);
+    printf("Pokemon evolved from %s (ID %d) to %s (ID %d).\n",
+        pokemonData->name, pokemonID, evolvedPokemon->name, evolvedID);
+}
+
 // --------------------------------------------------------------
 // Sub-menu for existing Pokedex
 // --------------------------------------------------------------
@@ -817,7 +864,7 @@ void enterExistingPokedexMenu() {
                 pokemonFight(pokedex);
                 break;
             case 5:
-                // evolvePokemon(pokedex);
+                evolvePokemon(pokedex);
                 break;
             case 6:
                 printf("Back to Main Menu.\n");

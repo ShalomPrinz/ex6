@@ -2010,3 +2010,594 @@ Your choice: Back to Main Menu.
 6. Print Owners in a direction X times
 7. Exit
 Your choice: Goodbye!
+
+- name: remove starter, evolve
+  input: |
+1
+evy
+1
+2
+1
+3
+1
+5
+6
+7
+  output: |
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice: Your name: Choose Starter:
+1. Bulbasaur
+2. Charmander
+3. Squirtle
+Your choice: New Pokedex created for evy with starter Bulbasaur.
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice:
+Existing Pokedexes:
+1. evy
+Choose a Pokedex by number:
+Entering evy's Pokedex...
+
+-- evy's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Enter Pokemon ID to release: Removing Pokemon Bulbasaur (ID 1).
+
+-- evy's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Cannot evolve. Pokedex empty.
+
+-- evy's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Back to Main Menu.
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice: Goodbye!
+
+- name: evolve ID 1->2->3->4, display
+  input: |
+1
+evy
+1
+2
+1
+5
+1
+5
+2
+5
+3
+2
+1
+6
+7
+  output: |
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice: Your name: Choose Starter:
+1. Bulbasaur
+2. Charmander
+3. Squirtle
+Your choice: New Pokedex created for evy with starter Bulbasaur.
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice:
+Existing Pokedexes:
+1. evy
+Choose a Pokedex by number:
+Entering evy's Pokedex...
+
+-- evy's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Enter ID of Pokemon to evolve: Removing Pokemon Bulbasaur (ID 1).
+Pokemon evolved from Bulbasaur (ID 1) to Ivysaur (ID 2).
+
+-- evy's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Enter ID of Pokemon to evolve: Removing Pokemon Ivysaur (ID 2).
+Pokemon evolved from Ivysaur (ID 2) to Venusaur (ID 3).
+
+-- evy's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Enter ID of Pokemon to evolve: Venusaur (ID 3) cannot evolve.
+
+-- evy's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Display:
+1. BFS (Level-Order)
+2. Pre-Order
+3. In-Order
+4. Post-Order
+5. Alphabetical (by name)
+Your choice: ID: 3, Name: Venusaur, Type: GRASS, HP: 80, Attack: 82, Can Evolve: No
+
+-- evy's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Back to Main Menu.
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice: Goodbye!
+
+- name: evolve non-exist pokemon
+  input: |
+1
+evy
+1
+2
+1
+5
+2
+6
+7
+  output: |
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice: Your name: Choose Starter:
+1. Bulbasaur
+2. Charmander
+3. Squirtle
+Your choice: New Pokedex created for evy with starter Bulbasaur.
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice:
+Existing Pokedexes:
+1. evy
+Choose a Pokedex by number:
+Entering evy's Pokedex...
+
+-- evy's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Enter ID of Pokemon to evolve: No Pokemon with ID 2 found.
+
+-- evy's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Back to Main Menu.
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice: Goodbye!
+
+- name: evolve to exist pokemon
+  input: |
+1
+evy
+1
+2
+1
+1
+2
+5
+1
+2
+1
+6
+7
+  output: |
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice: Your name: Choose Starter:
+1. Bulbasaur
+2. Charmander
+3. Squirtle
+Your choice: New Pokedex created for evy with starter Bulbasaur.
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice:
+Existing Pokedexes:
+1. evy
+Choose a Pokedex by number:
+Entering evy's Pokedex...
+
+-- evy's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Enter ID to add: Pokemon Ivysaur (ID 2) added.
+
+-- evy's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Enter ID of Pokemon to evolve: Evolution ID 2 (Ivysaur) already in the Pokedex. Releasing Bulbasaur (ID 1).
+Removing Pokemon Bulbasaur (ID 1).
+
+-- evy's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Display:
+1. BFS (Level-Order)
+2. Pre-Order
+3. In-Order
+4. Post-Order
+5. Alphabetical (by name)
+Your choice: ID: 2, Name: Ivysaur, Type: GRASS, HP: 60, Attack: 62, Can Evolve: Yes
+
+-- evy's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Back to Main Menu.
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice: Goodbye!
+
+- name: test evolve logic (remove + insert + duplicates)
+  input: |
+1
+evy-volvy
+3
+2
+1
+1
+4
+1
+2
+1
+3
+1
+1
+1
+6
+1
+5
+5
+4
+2
+2
+5
+2
+5
+1
+2
+2
+5
+2
+2
+3
+6
+7
+  output: |
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice: Your name: Choose Starter:
+1. Bulbasaur
+2. Charmander
+3. Squirtle
+Your choice: New Pokedex created for evy-volvy with starter Squirtle.
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice:
+Existing Pokedexes:
+1. evy-volvy
+Choose a Pokedex by number:
+Entering evy-volvy's Pokedex...
+
+-- evy-volvy's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Enter ID to add: Pokemon Charmander (ID 4) added.
+
+-- evy-volvy's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Enter ID to add: Pokemon Ivysaur (ID 2) added.
+
+-- evy-volvy's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Enter ID to add: Pokemon Venusaur (ID 3) added.
+
+-- evy-volvy's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Enter ID to add: Pokemon Bulbasaur (ID 1) added.
+
+-- evy-volvy's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Enter ID to add: Pokemon Charizard (ID 6) added.
+
+-- evy-volvy's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Enter ID to add: Pokemon Charmeleon (ID 5) added.
+
+-- evy-volvy's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Enter ID of Pokemon to evolve: Evolution ID 5 (Charmeleon) already in the Pokedex. Releasing Charmander (ID 4).
+Removing Pokemon Charmander (ID 4).
+
+-- evy-volvy's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Display:
+1. BFS (Level-Order)
+2. Pre-Order
+3. In-Order
+4. Post-Order
+5. Alphabetical (by name)
+Your choice: ID: 7, Name: Squirtle, Type: WATER, HP: 44, Attack: 48, Can Evolve: Yes
+ID: 5, Name: Charmeleon, Type: FIRE, HP: 58, Attack: 64, Can Evolve: Yes
+ID: 2, Name: Ivysaur, Type: GRASS, HP: 60, Attack: 62, Can Evolve: Yes
+ID: 1, Name: Bulbasaur, Type: GRASS, HP: 45, Attack: 49, Can Evolve: Yes
+ID: 3, Name: Venusaur, Type: GRASS, HP: 80, Attack: 82, Can Evolve: No
+ID: 6, Name: Charizard, Type: FIRE, HP: 78, Attack: 84, Can Evolve: No
+
+-- evy-volvy's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Enter ID of Pokemon to evolve: Evolution ID 3 (Venusaur) already in the Pokedex. Releasing Ivysaur (ID 2).
+Removing Pokemon Ivysaur (ID 2).
+
+-- evy-volvy's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Enter ID of Pokemon to evolve: Removing Pokemon Bulbasaur (ID 1).
+Pokemon evolved from Bulbasaur (ID 1) to Ivysaur (ID 2).
+
+-- evy-volvy's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Display:
+1. BFS (Level-Order)
+2. Pre-Order
+3. In-Order
+4. Post-Order
+5. Alphabetical (by name)
+Your choice: ID: 7, Name: Squirtle, Type: WATER, HP: 44, Attack: 48, Can Evolve: Yes
+ID: 5, Name: Charmeleon, Type: FIRE, HP: 58, Attack: 64, Can Evolve: Yes
+ID: 3, Name: Venusaur, Type: GRASS, HP: 80, Attack: 82, Can Evolve: No
+ID: 2, Name: Ivysaur, Type: GRASS, HP: 60, Attack: 62, Can Evolve: Yes
+ID: 6, Name: Charizard, Type: FIRE, HP: 78, Attack: 84, Can Evolve: No
+
+-- evy-volvy's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Enter ID of Pokemon to evolve: Evolution ID 3 (Venusaur) already in the Pokedex. Releasing Ivysaur (ID 2).
+Removing Pokemon Ivysaur (ID 2).
+
+-- evy-volvy's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Display:
+1. BFS (Level-Order)
+2. Pre-Order
+3. In-Order
+4. Post-Order
+5. Alphabetical (by name)
+Your choice: ID: 3, Name: Venusaur, Type: GRASS, HP: 80, Attack: 82, Can Evolve: No
+ID: 5, Name: Charmeleon, Type: FIRE, HP: 58, Attack: 64, Can Evolve: Yes
+ID: 6, Name: Charizard, Type: FIRE, HP: 78, Attack: 84, Can Evolve: No
+ID: 7, Name: Squirtle, Type: WATER, HP: 44, Attack: 48, Can Evolve: Yes
+
+-- evy-volvy's Pokedex Menu --
+1. Add Pokemon
+2. Display Pokedex
+3. Release Pokemon (by ID)
+4. Pokemon Fight!
+5. Evolve Pokemon
+6. Back to Main
+Your choice: Back to Main Menu.
+
+=== Main Menu ===
+1. New Pokedex
+2. Existing Pokedex
+3. Delete a Pokedex
+4. Merge Pokedexes
+5. Sort Owners by Name
+6. Print Owners in a direction X times
+7. Exit
+Your choice: Goodbye!
