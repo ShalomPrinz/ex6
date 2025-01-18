@@ -4,8 +4,6 @@
 
 // TODO malloc / realloc should be done with cast?
 
-// TODO should i handle root removal scenario? in pokedex -> pokemon remove
-
 // ================================================
 // Basic struct definitions from ex6.h assumed:
 //   PokemonData { int id; char *name; PokemonType TYPE; int hp; int attack; EvolutionStatus CAN_EVOLVE; }
@@ -561,7 +559,6 @@ PokemonNode *insertPokemonNode(PokemonNode *root, PokemonNode *newNode) {
         return NULL;
     }
 
-    // TODO redundant?
     return root;
 }
 
@@ -1091,20 +1088,31 @@ void mainMenu() {
 }
 
 void removeOwnerFromCircularList(OwnerNode *target) {
-    if (target->next == target) return;
-
     // Connect prev of target to its next
     target->next->prev = target->prev;
     target->prev->next = target->next;
 }
 
 void freeOwnerNode(OwnerNode *owner) {
+    // Save new owner head to set it after freeing given owner
+    OwnerNode* newOwnerHead = ownerHead;
+    // If there is only 1 owner, set it to NULL after freeing it
+    if (ownerHead == ownerHead->next)
+        newOwnerHead = NULL;
+    // If given owner is head and there are more owners, new owner head should be current head's next
+    else if (ownerHead == owner)
+        newOwnerHead = ownerHead->next;
+
+    // Remove given owner from owners list
     removeOwnerFromCircularList(owner);
 
     // Free owner by its properties order
     free(owner->ownerName);
     freePokemonTree(owner->pokedexRoot);
     free(owner);
+
+    // If first owner was removed, set head to the saved newOwnerHead
+    ownerHead = newOwnerHead;
 }
 
 void freeAllOwners() {
@@ -1136,21 +1144,13 @@ void deletePokedex() {
     // Print all pokedexes with indices by their order
     printf("\n=== Delete a Pokedex ===\n");
 
+    // Input an owner index to delete
     OwnerNode *currentOwner = choosePokedex("Choose a Pokedex to delete by number: ");
 
     // Remove chosen owner from owners list
     printf("Deleting %s's entire Pokedex...\n", currentOwner->ownerName);
-    /*
-     If first owner is removed, save its next owner for after removal
-     It should be NULL if there is only one owner, otherwise simply the next owner
-    */
-    OwnerNode* nextOwner = ownerHead == ownerHead->next ? NULL : ownerHead->next;
     freeOwnerNode(currentOwner);
     printf("Pokedex deleted.\n");
-
-    // If first pokedex was removed, set head to the second (which now becomes first)
-    if (currentOwner == ownerHead)
-        ownerHead = nextOwner;
 }
 
 /**
@@ -1185,14 +1185,20 @@ PokemonNode *mergePokedex(PokemonNode *target, PokemonNode *source) {
         if (current->right)
             queueInsert(queue, current->right);
 
-        // Visit current node: insert its data into target pokedex with a new pokemon node
+        // Create new node with current's data
         PokemonNode *insertedNode = createPokemonNode(current->data);
+        // Safely continue to next node if new node is NULL for any reason
+        if (insertedNode == NULL)
+            continue;
+
+        // Insert the new new node into target's pokedex
         PokemonNode *newTargetRoot = insertPokemonNode(target, insertedNode);
-        // If current pokemon is already in target pokedex, free insertedNode to prevent data leak
+
+        // If current pokemon was already in target pokedex, free insertedNode to prevent data leak
         if (newTargetRoot == NULL)
             free(insertedNode);
+        // Otherwise update target pokedex root to include inserted node
         else
-            // Update target pokedex root to include newly inserted node
             target = newTargetRoot;
     }
 
