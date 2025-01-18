@@ -1073,7 +1073,7 @@ void mainMenu() {
                 deletePokedex();
                 break;
             case 4:
-                // mergePokedexMenu();
+                mergePokedexMenu();
                 break;
             case 5:
                 sortOwners();
@@ -1151,6 +1151,94 @@ void deletePokedex() {
     // If first pokedex was removed, set head to the second (which now becomes first)
     if (currentOwner == ownerHead)
         ownerHead = nextOwner;
+}
+
+/**
+ * @brief Merges given pokedexes and updates target pokedex to include all relevant pokemons from source.
+ * @param target pokedex merge target
+ * @param source pokedex merge source
+ * @return new target pokedex root
+ */
+PokemonNode *mergePokedex(PokemonNode *target, PokemonNode *source) {
+    // Allocate queue
+    PokemonQueue *queue = malloc(sizeof(PokemonQueue));
+    if (!queue) {
+        printf("Memory allocation failed.\n");
+        return target;
+    }
+
+    // Init queue with source pokedex root node
+    queue->front = NULL;
+    queue->rear = NULL;
+    queueInsert(queue, source);
+
+    // Iterate BFS style on given source pokedex
+    while (!isEmptyQueue(queue)) {
+        // Save front QNode from queue
+        PokemonNode *current = queuePop(queue);
+
+        // If current node has left child, add it to queue and visit it later
+        if (current->left)
+            queueInsert(queue, current->left);
+
+        // If current node has right child, add it to queue and visit it later
+        if (current->right)
+            queueInsert(queue, current->right);
+
+        // Visit current node: insert its data into target pokedex with a new pokemon node
+        PokemonNode *insertedNode = createPokemonNode(current->data);
+        PokemonNode *newTargetRoot = insertPokemonNode(target, insertedNode);
+        // If current pokemon is already in target pokedex, free insertedNode to prevent data leak
+        if (newTargetRoot == NULL)
+            free(insertedNode);
+        else
+            // Update target pokedex root to include newly inserted node
+            target = newTargetRoot;
+    }
+
+    // Finish BFS, free queue
+    free(queue);
+    // Return new target pokedex root
+    return target;
+}
+
+void mergePokedexMenu() {
+    // Don't try to merge if there are 0 or 1 owners
+    if (ownerHead == NULL || ownerHead->next == ownerHead) {
+        printf("Not enough owners to merge.\n");
+        return;
+    }
+
+    // Display merge pokedexes menu
+    printf("\n=== Merge Pokedexes ===\nEnter name of first owner: ");
+    char *targetName = getDynamicInput();
+    printf("Enter name of second owner: ");
+    char *sourceName = getDynamicInput();
+
+    // Find owners by given names
+    OwnerNode *targetOwner = findOwnerByName(targetName);
+    OwnerNode *sourceOwner = findOwnerByName(sourceName);
+
+    // Merge given owners
+    if (targetOwner == NULL || sourceOwner == NULL)
+        // If no such owners with given names, don't merge any of them
+        printf("One or both owners not found.\n");
+    else if (targetOwner->pokedexRoot == NULL && sourceOwner->pokedexRoot == NULL) {
+        // If both owners have empty pokedex, merge doesn't make sense
+        printf("Both Pokedexes empty. Nothing to merge.\n");
+    } else {
+        // Valid owner names
+        printf("Merging %s and %s...\n", targetName, sourceName);
+        // Merge owners by required merge logic, update target owner pokedex root
+        targetOwner->pokedexRoot = mergePokedex(targetOwner->pokedexRoot, sourceOwner->pokedexRoot);
+        // Free source owner after all its pokemons were inserted into target owner pokedex
+        freeOwnerNode(sourceOwner);
+        printf("Merge completed.\nOwner '%s' has been removed after merging.\n", sourceName);
+    }
+
+    // Free given owner names
+    free(targetName);
+    free(sourceName);
 }
 
 int main() {
