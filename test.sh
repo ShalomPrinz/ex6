@@ -8,8 +8,7 @@ gcc -Wall -Wextra -Werror -g -std=c99 ex6.c -o program
 # Function to run a single test case
 run_test_case() {
     local input="$1"
-    local expected_output="$2"
-    local test_name="$3"
+    local test_name="$2"
 
     # Run with valgrind
     actual_output=$(valgrind --leak-check=full --error-exitcode=1 ./program 2>&1 <<< "$input")
@@ -24,6 +23,11 @@ run_test_case() {
     # Run the program with input and capture output
     actual_output=$(echo "$input" | ./program)
     actual_output="${actual_output}
+"
+
+    # Run their running file to get expected output
+    expected_output=$(echo "$input" | ./their_program)
+    expected_output="${expected_output}
 "
 
     # Create temporary files for comparison
@@ -51,10 +55,7 @@ passed_tests=0
 # Parse test cases
 current_name=""
 current_input=""
-current_output=""
-is_parsing_output=0
 is_parsing_input=0
-output_buffer=""
 
 # Process the test cases file
 while IFS= read -r line; do
@@ -66,14 +67,12 @@ while IFS= read -r line; do
         # Run previous test case if exists
         if [[ -n "$current_name" && -n "$current_input" ]]; then
             ((total_tests++))
-            if run_test_case "$current_input" "${current_output%?}" "$current_name"; then
+            if run_test_case "$current_input" "$current_name"; then
                 ((passed_tests++))
             fi
 
             # Reset for next test
             current_input=""
-            current_output=""
-            is_parsing_output=0
         fi
 
         # Extract new test name
@@ -82,7 +81,7 @@ while IFS= read -r line; do
     fi
 
     # Start of input block
-    if [[ "$trimmed_line" =~ ^input:\ \| ]]; then
+    if [[ "$trimmed_line" =~ ^-\ input: ]]; then
         is_parsing_input=1
         current_input=""
         continue
@@ -90,37 +89,19 @@ while IFS= read -r line; do
 
     # Parsing input block
     if [[ $is_parsing_input -eq 1 ]]; then
-        # Stop parsing input if we hit output marker
-        if [[ "$trimmed_line" =~ ^output:\ \| ]]; then
+        # Stop parsing input if we hit another test marker
+        if [[ "$trimmed_line" =~ ^-\ name: ]]; then
             is_parsing_input=0
         else
             current_input+="$line"$'\n'
-            continue
         fi
-    fi
-
-    # Start of output block
-    if [[ "$trimmed_line" =~ ^output:\ \| ]]; then
-        is_parsing_output=1
-        current_output=""
-        continue
-    fi
-
-    # Parsing output block
-    if [[ $is_parsing_output -eq 1 ]]; then
-        # Stop parsing output if we hit another test case marker
-        if [[ "$trimmed_line" =~ ^-\ name: ]]; then
-            is_parsing_output=0
-            continue
-        fi
-        current_output+="$line"$'\n'
     fi
 done < test_cases.txt
 
 # Run the last test case
 if [[ -n "$current_name" && -n "$current_input" ]]; then
     ((total_tests++))
-    if run_test_case "$current_input" "$current_output" "$current_name"; then
+    if run_test_case "$current_input" "$current_name"; then
         ((passed_tests++))
     fi
 fi

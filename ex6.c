@@ -905,15 +905,14 @@ void insertionSortOwners() {
 }
 
 void sortOwners() {
-    // Don't sort if there are no owners at all
-    if (ownerHead == NULL) {
+    // Don't sort if there are no owners at all or 1 owner
+    if (ownerHead == NULL || ownerHead->next == ownerHead) {
         printf("0 or 1 owners only => no need to sort.\n");
         return;
     }
 
-    // Sort only if there is more then one node in list
-    if (ownerHead->next != ownerHead)
-        insertionSortOwners();
+    // Sort owners
+    insertionSortOwners();
     printf("Owners sorted by name.\n");
 }
 
