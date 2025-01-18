@@ -10,7 +10,7 @@
 #define INT_BUFFER 128
 // Last pokemon id of available pokemons
 #define LAST_POKEMON_ID 151
-// Used in fight formula TODO allowed int with f in defines?
+// Used in fight formula
 #define FIGHT_ATTACK_FACTOR 1.5f
 // Used in fight formula
 #define FIGHT_HP_FACTOR 1.2f
@@ -65,6 +65,17 @@ typedef struct OwnerNode {
 // Global head pointer for the linked list of owners
 OwnerNode *ownerHead = NULL;
 
+// Queue node (for pokemons)
+typedef struct PokemonQueueNode {
+    PokemonNode *node;
+    struct PokemonQueueNode *next;
+} PokemonQueueNode;
+
+// Pokemons queue
+typedef struct PokemonQueue {
+    PokemonQueueNode *front, *rear;
+} PokemonQueue;
+
 /* ------------------------------------------------------------
    1) Safe Input + Utility
    ------------------------------------------------------------ */
@@ -91,6 +102,13 @@ char *myStrdup(const char *src);
  * Why we made it: We want robust menu/ID input handling.
  */
 int readIntSafe(const char *prompt);
+
+/**
+ * @brief Reads a single char from user's input and clears the buffer.
+ * @param prompt message to user
+ * @return first's user input char which is not a whitespace
+ */
+char readCharSafe(char* prompt);
 
 /**
  * @brief Read a line from stdin, store in malloc'd buffer, trim whitespace.
@@ -150,6 +168,37 @@ void freePokemonTree(PokemonNode *root);
 void freeOwnerNode(OwnerNode *owner);
 
 /* ------------------------------------------------------------
+   Queue Implementation (for BFS)
+   ------------------------------------------------------------ */
+
+/**
+ * @brief Create new queue node from a given pokemon node.
+ * @param node pokemon node to create queue node from
+ * @return newly allocated pokemon queue node
+ */
+PokemonQueueNode *createPokemonQueueNode(PokemonNode *node);
+
+/**
+ * @param queue queue to check if empty
+ * @return whether given queue is empty
+ */
+int isEmptyQueue(PokemonQueue *queue);
+
+/**
+ * @brief Inserts new queue node that with given data into given queue.
+ * @param queue queue to insert new node into
+ * @param data data of new queue node
+ */
+void queueInsert(PokemonQueue* queue, PokemonNode* data);
+
+/**
+ * @brief Pops first queue node from given queue.
+ * @param queue queue to remove node from
+ * @return popped queue node or NULL if no nodes in queue
+ */
+PokemonNode *queuePop(PokemonQueue* queue);
+
+/* ------------------------------------------------------------
    3) BST Insert, Search, Remove
    ------------------------------------------------------------ */
 
@@ -172,6 +221,13 @@ PokemonNode *insertPokemonNode(PokemonNode *root, PokemonNode *newNode);
 PokemonNode *searchPokemonBFS(PokemonNode *root, int id);
 
 /**
+ * @brief Returns minimum child of root, assuming BST is balanced.
+ * @param root node to start search from
+ * @return minimum value child of root
+ */
+PokemonNode *findMin(PokemonNode *root);
+
+/**
  * @brief Remove node from BST by ID if found (BST removal logic).
  * @param root BST root
  * @param id ID to remove
@@ -179,15 +235,6 @@ PokemonNode *searchPokemonBFS(PokemonNode *root, int id);
  * Why we made it: We handle special cases of a BST remove (0,1,2 children).
  */
 PokemonNode *removeNodeBST(PokemonNode *root, int id);
-
-/**
- * @brief Combine BFS search + BST removal to remove Pokemon by ID.
- * @param root BST root
- * @param id the ID to remove
- * @return updated BST root
- * Why we made it: BFS confirms existence, then removeNodeBST does the removal.
- */
-PokemonNode *removePokemonByID(PokemonNode *root, int id);
 
 /* ------------------------------------------------------------
    4) Generic BST Traversals (Function Pointers)
@@ -231,6 +278,12 @@ void inOrderGeneric(PokemonNode *root, VisitNodeFunc visit);
 void postOrderGeneric(PokemonNode *root, VisitNodeFunc visit);
 
 /**
+ * @brief Prints given pokemon data in required format.
+ * @param data pokemon data to print
+ */
+void printPokemonData(PokemonData *data);
+
+/**
  * @brief Print one PokemonNode’s data: ID, Name, Type, HP, Attack, Evolve?
  * @param node pointer to the node
  * Why we made it: We can pass this to BFSGeneric or others to quickly print.
@@ -240,6 +293,14 @@ void printPokemonNode(PokemonNode *node);
 /* ------------------------------------------------------------
    5) Display Methods (BFS, Pre, In, Post, Alphabetical)
    ------------------------------------------------------------ */
+
+/**
+ * @brief Inserts all pokemons from given pokedex to a sorted pokemons array.
+ * @param root root pokemon node
+ * @param pokemons pointers array of pokemons
+ * Sorts pokemons alphabetically during insertion to pokemons array.
+ */
+void preOrderSort(PokemonNode *root, PokemonData **pokemons);
 
 /**
  * @brief BFS is nice, but alphabetical means we gather all nodes, sort by name, then print.
@@ -281,6 +342,13 @@ void postOrderTraversal(PokemonNode *root);
    ------------------------------------------------------------ */
 
 /**
+ * @brief Calculate given pokemon's score based on the fight formula: (attack * 1.5 + hp * 1.2).
+ * @param pokemon calculate its score
+ * @return given pokemon's score
+ */
+float calcualatePokemonScore(PokemonData *pokemon);
+
+/**
  * @brief Let user pick two Pokemon by ID in the same Pokedex to fight.
  * @param owner pointer to the Owner
  * Why we made it: Fun demonstration of BFS and custom formula for battles.
@@ -320,8 +388,13 @@ void freePokemon(OwnerNode *owner);
 void displayMenu(OwnerNode *owner);
 
 /* ------------------------------------------------------------
-   8) Sorting Owners (Bubble Sort on Circular List)
+   8) Sorting Owners (Insertion Sort on Circular List)
    ------------------------------------------------------------ */
+
+/**
+ * @brief Implementation of insertion sort algorithm to sort owners list
+ */
+void insertionSortOwners();
 
 /**
  * @brief Sort the circular owners list by name.
@@ -340,6 +413,13 @@ void swapOwnerData(OwnerNode *a, OwnerNode *b);
 /* ------------------------------------------------------------
    9) Circular List Linking & Searching
    ------------------------------------------------------------ */
+
+/**
+ * @brief Inputs an owner from owners list.
+ * @param prompt message for choosing pokedex
+ * @return chosen pokedex
+ */
+OwnerNode *choosePokedex(char *prompt);
 
 /**
  * @brief Insert a new owner into the circular list. If none exist, it's alone.
@@ -374,6 +454,17 @@ OwnerNode *findOwnerByName(const char *name);
 void enterExistingPokedexMenu(void);
 
 /**
+ * @brief Derives pokemon's index from user's choice by a formula.
+ * @param choice user's starter choice
+ * @return chosen pokemon's index in pokemons array
+ * Formula matches each possible choice correctly:
+ * 1. Bulbasaur     -> index: 0
+ * 2. Charmander    -> index: 3
+ * 3. Squirtle      -> index: 6
+ */
+int getStarterPokemonID(int choice);
+
+/**
  * @brief Creates a new Pokedex (prompt for name, check uniqueness, choose starter).
  * Why we made it: The main entry for building a brand-new Pokedex.
  */
@@ -384,6 +475,14 @@ void openPokedexMenu(void);
  * Why we made it: Let user pick which Pokedex to remove and free everything.
  */
 void deletePokedex(void);
+
+/**
+ * @brief Merges given pokedexes and updates target pokedex to include all relevant pokemons from source.
+ * @param target pokedex merge target
+ * @param source pokedex merge source
+ * @return new target pokedex root
+ */
+PokemonNode *mergePokedexes(PokemonNode *target, PokemonNode *source);
 
 /**
  * @brief Merge the second owner's Pokedex into the first, then remove the second owner.
