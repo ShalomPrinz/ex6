@@ -188,6 +188,33 @@ const char *getTypeName(PokemonType type) {
    2) Creating & Freeing Nodes
    ------------------------------------------------------------ */
 
+PokemonData *duplicatePokemonData(const PokemonData *data) {
+    // Allocate memory for duplicated pokemon data
+    PokemonData *duplicatedData = (PokemonData *)malloc(sizeof(PokemonData));
+    if (duplicatedData == NULL) {
+        printf("Memory allocation failed.\n");
+        return NULL;
+    }
+
+    // Duplicate given data's name into new data's name
+    duplicatedData->name = myStrdup(data->name);
+    // Safely stop the process if string duplication failed
+    if (duplicatedData->name == NULL) {
+        free(duplicatedData);
+        return NULL;
+    }
+
+    // Copy all other properties of given pokemon data
+    duplicatedData->attack = data->attack;
+    duplicatedData->hp = data->hp;
+    duplicatedData->id = data->id;
+    duplicatedData->TYPE = data->TYPE;
+    duplicatedData->CAN_EVOLVE = data->CAN_EVOLVE;
+
+    // Return duplicated data pointer
+    return duplicatedData;
+}
+
 PokemonNode *createPokemonNode(const PokemonData *data) {
     // Allocate memory for new pokemon node
     PokemonNode *newNode = (PokemonNode *)malloc(sizeof(PokemonNode));
@@ -196,10 +223,17 @@ PokemonNode *createPokemonNode(const PokemonData *data) {
         return NULL;
     }
 
+    // Duplicate given data to another address in memory
+    PokemonData *newNodeData = duplicatePokemonData(data);
+    if (newNodeData == NULL) {
+        free(newNode);
+        return NULL;
+    }
+
     // Init pokemon node with default values and return it
     newNode->left = NULL;
     newNode->right = NULL;
-    newNode->data = (PokemonData*) data; // TODO not allocating, think if it's right
+    newNode->data = newNodeData;
     return newNode;
 }
 
@@ -217,8 +251,24 @@ OwnerNode *createOwner(char *ownerName, PokemonNode *starter) {
     return newOwner;
 }
 
-// TODO currently free node only because pokemon isn't allocated
+void freePokemonData(PokemonData *data) {
+    // Prevent error when freeing data->name
+    if (data == NULL) return;
+
+    // Free data's name and then data itself
+    free(data->name);
+    free(data);
+}
+
 void freePokemonNode(PokemonNode *node) {
+    // Prevent error when validating if node->data is NULL
+    if (node == NULL) return;
+
+    // Free node's data only if exists
+    if (node->data != NULL)
+        freePokemonData(node->data);
+
+    // Free the node itself
     free(node);
 }
 
@@ -425,11 +475,13 @@ PokemonNode *removeNodeBST(PokemonNode *root, int id) {
             return newChild;
         }
 
-        // Found node has 2 children: find successor to replace him
+        // Found node has 2 children: find successor on right branch to replace him
         PokemonNode* successor = findMin(root->right);
 
-        // Replace root's data with its successor's data
-        root->data = successor->data;
+        // Free current root's data
+        freePokemonData(root->data);
+        // Set root's data to a duplication of successor's data
+        root->data = duplicatePokemonData(successor->data);
 
         // Remove the successor node
         root->right = removeNodeBST(root->right, successor->data->id);
@@ -640,51 +692,65 @@ void pokemonFight(OwnerNode *owner) {
 }
 
 void evolvePokemon(OwnerNode *owner) {
+    // Don't try to evolve if pokedex is empty
     if (owner->pokedexRoot == NULL) {
         printf("Cannot evolve. Pokedex empty.\n");
         return;
     }
 
+    // Input an ID from user
     int pokemonID = readIntSafe("Enter ID of Pokemon to evolve: ");
 
+    // Can't evolve a pokemon which is not in the pokedex
     PokemonNode *pokemon = searchPokemonBFS(owner->pokedexRoot, pokemonID);
     if (pokemon == NULL) {
         printf("No Pokemon with ID %d found.\n", pokemonID);
         return;
     }
 
-    PokemonData *pokemonData = pokemon->data;
+    // Save pokemon name for later user, even if pokemon is freed during the process
+    char *pokemonName = myStrdup(pokemon->data->name);
+    // Can't evolve a pokemon which its CAN_EVOLVE attribute is set to false
     if (!pokemon->data->CAN_EVOLVE) {
-        printf("%s (ID %d) cannot evolve.\n", pokemonData->name, pokemonID);
+        printf("%s (ID %d) cannot evolve.\n", pokemonName, pokemonID);
+        free(pokemonName);
         return;
     }
 
     // Check if evolved pokemon already exists in pokedex
     int evolvedID = pokemonID + 1;
-    PokemonData *evolvedPokemon = (PokemonData *) &pokedex[evolvedID - 1];
+    /*
+     Save local pointer to evolved pokemon's data.
+     - Made it const because pokemons array is defined with const.
+    */
+    const PokemonData *evolvedPokemon = &pokedex[evolvedID - 1];
     if (searchPokemonBFS(owner->pokedexRoot, evolvedID) != NULL) {
         printf("Evolution ID %d (%s) already in the Pokedex. Releasing %s (ID %d).\n",
-            evolvedID, evolvedPokemon->name, pokemonData->name, pokemonID);
+            evolvedID, evolvedPokemon->name, pokemonName, pokemonID);
 
         // Remove old pokemon and don't insert its evolved form
-        printf("Removing Pokemon %s (ID %d).\n", pokemonData->name, pokemonID);
+        printf("Removing Pokemon %s (ID %d).\n", pokemonName, pokemonID);
         owner->pokedexRoot = removeNodeBST(owner->pokedexRoot, pokemonID);
+        free(pokemonName);
         return;
     }
 
     // Remove old pokemon before its evolved form is inserted into pokedex
-    printf("Removing Pokemon %s (ID %d).\n", pokemonData->name, pokemonID);
+    printf("Removing Pokemon %s (ID %d).\n", pokemonName, pokemonID);
     owner->pokedexRoot = removeNodeBST(owner->pokedexRoot, pokemonID);
 
     // Create pokemon node with evolved pokemon data
     PokemonNode *evolvedNode = createPokemonNode(evolvedPokemon);
-    if (evolvedNode == NULL)
+    if (evolvedNode == NULL) {
+        free(pokemonName);
         return;
+    }
 
     // Insert evolved pokemon into pokedex
     owner->pokedexRoot = insertPokemonNode(owner->pokedexRoot, evolvedNode);
     printf("Pokemon evolved from %s (ID %d) to %s (ID %d).\n",
-        pokemonData->name, pokemonID, evolvedPokemon->name, evolvedID);
+        pokemonName, pokemonID, evolvedPokemon->name, evolvedID);
+    free(pokemonName);
 }
 
 void addPokemon(OwnerNode *owner) {
@@ -704,7 +770,7 @@ void addPokemon(OwnerNode *owner) {
     PokemonNode *newRoot = insertPokemonNode(owner->pokedexRoot, newNode);
     if (newRoot == NULL) {
         printf("Pokemon with ID %d is already in the Pokedex. No changes made.\n", pokemonID);
-        free(newNode);
+        freePokemonNode(newNode);
         return;
     }
 
@@ -952,7 +1018,7 @@ void openPokedexMenu() {
     printf("Your name: ");
     char *name = getDynamicInput();
 
-    // Validate name isn't duplicate of existing owner name
+    // Validate given name isn't a duplicate of existing owner name
     if (findOwnerByName(name) != NULL) {
         printf("Owner '%s' already exists. Not creating a new Pokedex.\n", name);
         free(name);
@@ -964,24 +1030,19 @@ void openPokedexMenu() {
     int choice = readIntSafe("Your choice: ");
     int pokemonIndex = getStarterPokemonID(choice);
 
-    // Init new owner's pokedex
-    PokemonNode *ownerPokedex = (PokemonNode *)malloc(sizeof(PokemonNode));
-    if (ownerPokedex == NULL) {
-        printf("Memory allocation failed.\n");
+    // Init new owner's pokedex with starter pokemon
+    PokemonNode *ownerPokedex = createPokemonNode(&pokedex[pokemonIndex]);
+    // Safely stop creating process if memory allocation failed
+    if (ownerPokedex == NULL)
         return;
-    }
-
-    ownerPokedex->left = NULL;
-    ownerPokedex->right = NULL;
-    // TODO should I malloc new mem for this? currently i think not
-    ownerPokedex->data = (PokemonData *) &pokedex[pokemonIndex];
 
     // Add owner to global owner linked list
     OwnerNode *newOwner = createOwner(name, ownerPokedex);
+    // Safely stop creating process if memory allocation failed
     if (newOwner == NULL)
         return;
 
-    // Link owner to circular list
+    // Link owner to circular list to finish its creation
     linkOwnerInCircularList(newOwner);
     printf("New Pokedex created for %s with starter %s.\n", name, ownerPokedex->data->name);
 }
@@ -1041,7 +1102,7 @@ PokemonNode *mergePokedexes(PokemonNode *target, PokemonNode *source) {
 
         // If current pokemon was already in target pokedex, free insertedNode to prevent data leak
         if (newTargetRoot == NULL)
-            free(insertedNode);
+            freePokemonNode(insertedNode);
         // Otherwise update target pokedex root to include inserted node
         else
             target = newTargetRoot;

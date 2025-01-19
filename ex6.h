@@ -130,6 +130,13 @@ const char *getTypeName(PokemonType type);
    ------------------------------------------------------------ */
 
 /**
+ * @brief Duplicates given pokemon data into a new address
+ * @param data pokemon data to duplicate
+ * @return dupicated pokemon data
+ */
+PokemonData *duplicatePokemonData(const PokemonData *data);
+
+/**
  * @brief Create a BST node with a copy of the given PokemonData.
  * @param data pointer to PokemonData (like from the global pokedex)
  * @return newly allocated PokemonNode*
@@ -145,6 +152,12 @@ PokemonNode *createPokemonNode(const PokemonData *data);
  * Why we made it: Each user is represented as an OwnerNode.
  */
 OwnerNode *createOwner(char *ownerName, PokemonNode *starter);
+
+/**
+ * Frees given pokemon data (including its name)
+ * @param data pokemon data to free
+ */
+void freePokemonData(PokemonData *data);
 
 /**
  * @brief Free one PokemonNode (including name).
@@ -221,7 +234,7 @@ PokemonNode *insertPokemonNode(PokemonNode *root, PokemonNode *newNode);
 PokemonNode *searchPokemonBFS(PokemonNode *root, int id);
 
 /**
- * @brief Returns minimum child of root, assuming BST is balanced.
+ * @brief Returns minimum child of root, assuming BST is balanced (only branches of given root).
  * @param root node to start search from
  * @return minimum value child of root
  */
