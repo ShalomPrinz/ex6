@@ -313,6 +313,7 @@ PokemonQueueNode *createPokemonQueueNode(PokemonNode *node) {
 }
 
 int isEmptyQueue(PokemonQueue *queue) {
+    // Queue is empty if it's NULL or if its front is NULL
     return queue == NULL || queue->front == NULL;
 }
 
@@ -650,8 +651,13 @@ void postOrderTraversal(PokemonNode *root) {
     postOrderGeneric(root, printPokemonNode);
 }
 
-float calcualatePokemonScore(PokemonData *pokemon) {
+float calculatePokemonScore(PokemonData *pokemon) {
     return (float) pokemon->attack * FIGHT_ATTACK_FACTOR + (float) pokemon->hp * FIGHT_HP_FACTOR;
+}
+
+const PokemonData *getPokemonFromPokedex(int pokemonID) {
+    // Pokedex pokemon index is determined as its ID - 1
+    return &pokedex[pokemonID - 1];
 }
 
 void pokemonFight(OwnerNode *owner) {
@@ -676,8 +682,8 @@ void pokemonFight(OwnerNode *owner) {
     }
 
     // Calculate chosen pokemons score
-    float firstScore = calcualatePokemonScore(firstPokemon->data);
-    float secondScore = calcualatePokemonScore(secondPokemon->data);
+    float firstScore = calculatePokemonScore(firstPokemon->data);
+    float secondScore = calculatePokemonScore(secondPokemon->data);
 
     // Print fight statistics and result
     printf("Pokemon 1: %s (Score = %.2f)\n", firstPokemon->data->name, firstScore);
@@ -709,21 +715,17 @@ void evolvePokemon(OwnerNode *owner) {
     }
 
     // Save pokemon name for later user, even if pokemon is freed during the process
-    char *pokemonName = myStrdup(pokemon->data->name);
+    char *pokemonName = getPokemonFromPokedex(pokemon->data->id)->name;
     // Can't evolve a pokemon which its CAN_EVOLVE attribute is set to false
     if (!pokemon->data->CAN_EVOLVE) {
         printf("%s (ID %d) cannot evolve.\n", pokemonName, pokemonID);
-        free(pokemonName);
         return;
     }
 
     // Check if evolved pokemon already exists in pokedex
     int evolvedID = pokemonID + 1;
-    /*
-     Save local pointer to evolved pokemon's data.
-     - Made it const because pokemons array is defined with const.
-    */
-    const PokemonData *evolvedPokemon = &pokedex[evolvedID - 1];
+    // Save local pointer to evolved pokemon's data.
+    const PokemonData *evolvedPokemon = getPokemonFromPokedex(evolvedID);
     if (searchPokemonBFS(owner->pokedexRoot, evolvedID) != NULL) {
         printf("Evolution ID %d (%s) already in the Pokedex. Releasing %s (ID %d).\n",
             evolvedID, evolvedPokemon->name, pokemonName, pokemonID);
@@ -731,7 +733,6 @@ void evolvePokemon(OwnerNode *owner) {
         // Remove old pokemon and don't insert its evolved form
         printf("Removing Pokemon %s (ID %d).\n", pokemonName, pokemonID);
         owner->pokedexRoot = removeNodeBST(owner->pokedexRoot, pokemonID);
-        free(pokemonName);
         return;
     }
 
@@ -741,19 +742,17 @@ void evolvePokemon(OwnerNode *owner) {
 
     // Create pokemon node with evolved pokemon data
     PokemonNode *evolvedNode = createPokemonNode(evolvedPokemon);
-    if (evolvedNode == NULL) {
-        free(pokemonName);
+    if (evolvedNode == NULL)
         return;
-    }
 
     // Insert evolved pokemon into pokedex
     owner->pokedexRoot = insertPokemonNode(owner->pokedexRoot, evolvedNode);
     printf("Pokemon evolved from %s (ID %d) to %s (ID %d).\n",
         pokemonName, pokemonID, evolvedPokemon->name, evolvedID);
-    free(pokemonName);
 }
 
 void addPokemon(OwnerNode *owner) {
+    // Input a pokemon ID and validate its a valid ID
     int pokemonID = readIntSafe("Enter ID to add: ");
     if (pokemonID < 1 || pokemonID > LAST_POKEMON_ID) {
         printf("Invalid ID.\n");
@@ -761,7 +760,7 @@ void addPokemon(OwnerNode *owner) {
     }
 
     // Allocate new pokemon node
-    PokemonData *pokemon = (PokemonData *) &pokedex[pokemonID - 1];
+    const PokemonData *pokemon = getPokemonFromPokedex(pokemonID);
     PokemonNode *newNode = createPokemonNode(pokemon);
     if (newNode == NULL)
         return;
@@ -1009,7 +1008,7 @@ void enterExistingPokedexMenu() {
     } while (subChoice != 6);
 }
 
-int getStarterPokemonID(int choice) {
+int getStarterPokemonIndex(int choice) {
     return (choice - 1) * 3;
 }
 
@@ -1028,7 +1027,15 @@ void openPokedexMenu() {
     // Input starter pokemon and calculate its index in pokemons array
     printf("Choose Starter:\n1. Bulbasaur\n2. Charmander\n3. Squirtle\n");
     int choice = readIntSafe("Your choice: ");
-    int pokemonIndex = getStarterPokemonID(choice);
+
+    // Validate starter pokemon is 1, 2 or 3
+    if (choice < MIN_STARTER || choice > MAX_STARTER) {
+        printf("Invalid choice.\n");
+        free(name);
+        return;
+    }
+    // Pokemon index in pokedex array is determined by a formula
+    int pokemonIndex = getStarterPokemonIndex(choice);
 
     // Init new owner's pokedex with starter pokemon
     PokemonNode *ownerPokedex = createPokemonNode(&pokedex[pokemonIndex]);
@@ -1048,6 +1055,7 @@ void openPokedexMenu() {
 }
 
 void deletePokedex() {
+    // Can't delete a pokedex if there are no pokedexes
     if (ownerHead == NULL) {
         printf("No existing Pokedexes to delete.\n");
         return;

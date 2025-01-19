@@ -788,3 +788,97 @@ B
 3
 1
 7
+
+- name: new owner with wrong starter
+- input:
+1
+wrongy
+4
+1
+w2
+0
+7
+
+- name: create maximum depth evolution chain
+- input:
+1
+deep
+2
+2
+1
+1
+1
+1
+2
+1
+3
+5
+1
+5
+2
+5
+3
+2
+1
+6
+7
+
+- name: merge three pokedexes sequentially
+- input:
+1
+first
+2
+1
+second
+2
+1
+third
+2
+4
+first
+second
+4
+first
+third
+2
+1
+6
+7
+
+- name: evolve non-leaf node
+- input:
+1
+tree
+2
+2
+1
+1
+4
+1
+2
+1
+6
+5
+4
+6
+7
+
+- name: release root node with two children
+- input:
+1
+root
+2
+2
+1
+1
+4
+1
+2
+1
+6
+3
+4
+2
+1
+6
+7

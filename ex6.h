@@ -10,6 +10,10 @@
 #define INT_BUFFER 128
 // Last pokemon id of available pokemons
 #define LAST_POKEMON_ID 151
+// Minimum pokemon ID that is allowed to start with
+#define MIN_STARTER 1
+// Maximum pokemon ID that is allowed to start with
+#define MAX_STARTER 3
 // Used in fight formula
 #define FIGHT_ATTACK_FACTOR 1.5f
 // Used in fight formula
@@ -359,7 +363,16 @@ void postOrderTraversal(PokemonNode *root);
  * @param pokemon calculate its score
  * @return given pokemon's score
  */
-float calcualatePokemonScore(PokemonData *pokemon);
+float calculatePokemonScore(PokemonData *pokemon);
+
+/**
+ * @brief Returns original pokemon with given ID
+ * @param pokemonID ID of pokemon to get from pokedex
+ * @return Original pokemon from pokedex which has given pokemonID as its ID
+ * @note Made it const because pokemons array is defined with const
+ * @attention Don't free returned pointer because its the original pokemon
+ */
+const PokemonData *getPokemonFromPokedex(int pokemonID);
 
 /**
  * @brief Let user pick two Pokemon by ID in the same Pokedex to fight.
@@ -420,6 +433,7 @@ void sortOwners(void);
  * @param a pointer to first owner
  * @param b pointer to second owner
  * Why we made it: Used internally by bubble sort to swap data.
+ * @note Swaps owners by properties swap, due to behavior of circular linked list
  */
 void swapOwnerData(OwnerNode *a, OwnerNode *b);
 
@@ -475,7 +489,7 @@ void enterExistingPokedexMenu(void);
  * 2. Charmander    -> index: 3
  * 3. Squirtle      -> index: 6
  */
-int getStarterPokemonID(int choice);
+int getStarterPokemonIndex(int choice);
 
 /**
  * @brief Creates a new Pokedex (prompt for name, check uniqueness, choose starter).
